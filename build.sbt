@@ -7,11 +7,6 @@ mainClass in (Compile,run) := Some("finatra.HaveANiceDayServerMain")
 enablePlugins(ScalafmtPlugin)
 CommandAliases.addCommandAliases()
 
-resolvers ++= Seq(
-  "Twitter maven repository" at "http://maven.twttr.com",
-  "Finatra maven repository" at "http://twitter.github.com/finatra"
-)
-
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
