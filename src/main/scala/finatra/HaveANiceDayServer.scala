@@ -6,9 +6,9 @@ import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceI
 import com.twitter.finatra.http.routing.HttpRouter
 import finatra.controllers.RootController
 
-object ServerMain extends Server
+object HaveANiceDayServerMain extends HaveANiceDayServer
 
-class Server extends HttpServer {
+class HaveANiceDayServer extends HttpServer {
 
   override protected def defaultFinatraHttpPort = ":9000"
 

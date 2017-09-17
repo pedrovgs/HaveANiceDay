@@ -5,7 +5,7 @@ import com.twitter.finatra.http.Controller
 
 class RootController extends Controller {
 
-  get("/ping") { _: Request =>
+  get("/") { _: Request =>
     response.ok
   }
 }
