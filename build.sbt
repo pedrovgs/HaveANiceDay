@@ -1,6 +1,6 @@
 name := "HaveANiceDay"
-version := "0.1"
-scalaVersion := "2.12.3"
+version := Versions.project
+scalaVersion := Versions.scala
 
 mainClass in (Compile,run) := Some("finatra.HaveANiceDayServerMain")
 
@@ -9,6 +9,7 @@ CommandAliases.addCommandAliases()
 
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback
+libraryDependencies += "com.jakehschwartz" %% "finatra-swagger" % Versions.finatraSwagger
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test
