@@ -37,6 +37,16 @@ swagger-codegen generate -i target/swagger/swagger.json -l swift -o ~/Desktop/zo
 
 The complete documentation of the plugin being used to generate the Swagger specs can be found [here](https://github.com/jakehschwartz/finatra-swagger). 
 
+## Docker
+
+Inside ``docker`` folder you'll find all the images and utils to run Have a nice day locally using [Docker](https://docker.com) by just executing the following command. Remember to start docker before running your app.
+
+```
+ docker-compose up -d
+```
+
+This will download pre-builded images and download dependencies in order to build local images.
+
 ## Contributing
 
 If you would like to contribute code to this repository you can do so through GitHub by creating a new branch in the repository and sending a pull request or opening an issue. Please, remember that there are some requirements you have to pass before accepting your contribution:

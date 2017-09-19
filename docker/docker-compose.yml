@@ -1,0 +1,23 @@
+version: '3'
+services:
+  database:
+    image: "mysql:5.6"
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: haveaniceday
+      MYSQL_DATABASE: haveaniceday
+      MYSQL_USER: haveaniceday
+      MYSQL_PASSWORD: haveaniceday
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+  queue:
+    build: queue/.
+    ports:
+      - 9324:9324
+    expose:
+      - 9324
+volumes:
+    db_data:
