@@ -1,5 +1,5 @@
 FROM       openjdk:8
-MAINTAINER Karumi
+MAINTAINER Pedro Vicente Gómez Sánchez
 
 
 ADD  https://s3-eu-west-1.amazonaws.com/softwaremill-public/elasticmq-server-0.13.8.jar /elasticmq/elasticmq-server-0.13.8.jar
