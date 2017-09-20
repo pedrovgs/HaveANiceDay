@@ -37,6 +37,16 @@ swagger-codegen generate -i target/swagger/swagger.json -l swift -o ~/Desktop/zo
 
 The complete documentation of the plugin being used to generate the Swagger specs can be found [here](https://github.com/jakehschwartz/finatra-swagger). 
 
+## Docker
+
+Inside ``docker`` folder you'll find all the images and utils to run Have a nice day locally using [Docker](https://docker.com) by just executing the following command. Remember to start docker before running your app.
+
+```
+ docker-compose up -d
+```
+
+This will download pre-builded images and download dependencies in order to build local images.
+
 ## DB Migrations
 
 This project handles DB migrations using [Flyway](https://flywaydb.org). All the DB migrations can be found in ``src/main/resources/db/migration``. Remember that migrations won't be applied automatically. In order to run a migration in your local environment you can execute ``sbt flywayMigrate``. If the migration has to be performed in the production server you'll need to connect to the DB instance using ``flyway`` CLI and execute the following command:
