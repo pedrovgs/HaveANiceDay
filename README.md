@@ -47,6 +47,14 @@ Inside ``docker`` folder you'll find all the images and utils to run Have a nice
 
 This will download pre-builded images and download dependencies in order to build local images.
 
+## DB Migrations
+
+This project handles DB migrations using [Flyway](https://flywaydb.org). All the DB migrations can be found in ``src/main/resources/db/migration``. Remember that migrations won't be applied automatically. In order to run a migration in your local environment you can execute ``sbt flywayMigrate``. If the migration has to be performed in the production server you'll need to connect to the DB instance using ``flyway`` CLI and execute the following command:
+
+```
+flyway -user=<REDACTED> -password=<REDACTED> -url=jdbc:mysql://<REDACTED> -locations=filesystem:src/main/resources/db/migration migrate
+```
+
 ## Contributing
 
 If you would like to contribute code to this repository you can do so through GitHub by creating a new branch in the repository and sending a pull request or opening an issue. Please, remember that there are some requirements you have to pass before accepting your contribution:

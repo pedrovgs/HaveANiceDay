@@ -10,6 +10,8 @@ CommandAliases.addCommandAliases()
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback
 libraryDependencies += "com.jakehschwartz" %% "finatra-swagger" % Versions.finatraSwagger
+libraryDependencies += "com.h2database" % "h2" % Versions.flyway
+libraryDependencies += "mysql" % "mysql-connector-java" % Versions.mysqlConnector
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test
@@ -26,4 +28,6 @@ libraryDependencies += "com.google.inject.extensions" % "guice-testlib" % Versio
 libraryDependencies += "org.mockito" % "mockito-core" % Versions.mockito % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
 
-        
+flywayUrl := "jdbc:mysql://localhost/haveaniceday"
+flywayUser := "haveaniceday"
+flywayPassword := "haveaniceday"
