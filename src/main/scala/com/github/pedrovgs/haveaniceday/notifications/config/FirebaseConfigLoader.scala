@@ -1,9 +1,9 @@
-package com.github.pedrovgs.haveaniceday.notifications
+package com.github.pedrovgs.haveaniceday.notifications.config
 
+import classy.config._
 import classy.generic._
 import com.github.pedrovgs.haveaniceday.notifications.model.FirebaseConfig
 import com.typesafe.config.Config
-import classy.config._
 
 object FirebaseConfigLoader {
 

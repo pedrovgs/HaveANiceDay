@@ -1,4 +1,4 @@
-package com.github.pedrovgs.haveaniceday.notifications
+package com.github.pedrovgs.haveaniceday.notifications.config
 
 import com.github.pedrovgs.haveaniceday.notifications.model.FirebaseConfig
 import com.typesafe.config.ConfigFactory

@@ -1,6 +1,6 @@
 package finatra.config
 
-import com.github.pedrovgs.haveaniceday.notifications.FirebaseConfigLoader
+import com.github.pedrovgs.haveaniceday.notifications.config.FirebaseConfigLoader
 import com.github.pedrovgs.haveaniceday.notifications.model.FirebaseConfig
 import com.google.inject.{Provides, Singleton}
 import com.twitter.inject.TwitterModule

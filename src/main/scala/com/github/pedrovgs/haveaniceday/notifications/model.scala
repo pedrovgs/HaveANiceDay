@@ -4,4 +4,6 @@ object model {
 
   case class FirebaseConfig(firebaseApiKey: String)
 
+  case class Notification(title: String, messgae: String, photoUrl: Option[String])
+
 }
