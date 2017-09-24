@@ -24,17 +24,17 @@ class NotificationsClient @Inject()(config: FirebaseConfig) {
   }
 
   private def sendPostRequestToFirebase(notification: Notification): HttpResponse[String] = {
-    val body = generateRequestBody(notification)
-    val request: HttpRequest = Http("https://fcm.googleapis.com/fcm/send")
+    val body = generateRequestBody(config.firebaseDefaultTopic, notification)
+    val request: HttpRequest = Http(config.firebaseUrl)
       .header("Authorization", "key=" + config.firebaseApiKey)
       .header("Content-Type", "application/json")
     request.postData(body).asString
   }
 
-  private def generateRequestBody(notification: Notification): String = {
+  private def generateRequestBody(to: String, notification: Notification): String = {
     val firebaseNotificationData =
       FirebaseNotificationData(notification.title, notification.messgae, notification.photoUrl)
-    val firebaseNotification = FirebaseNotification("/topics/haveANiceDay", firebaseNotificationData)
+    val firebaseNotification = FirebaseNotification(to, firebaseNotificationData)
     firebaseNotification.asJson.toString
   }
 }

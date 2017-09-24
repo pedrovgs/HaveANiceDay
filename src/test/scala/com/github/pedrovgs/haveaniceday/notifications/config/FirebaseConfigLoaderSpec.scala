@@ -6,12 +6,14 @@ import org.scalatest.{FlatSpec, Matchers}
 
 class FirebaseConfigLoaderSpec extends FlatSpec with Matchers {
 
-  "FirebaseConfigLoader" should "read the config value associated to the api key" in {
+  "FirebaseConfigLoader" should "read the values associated with the firebase configuration" in {
     val config = ConfigFactory.load("firebase/validFirebaseConfig.conf")
 
     val firebaseConfig = FirebaseConfigLoader.loadFirebaseConfig(config).get
 
-    firebaseConfig shouldBe FirebaseConfig("firebase_api_key")
+    firebaseConfig shouldBe FirebaseConfig("https://fcm.googleapis.com/fcm/send",
+                                           "firebase_api_key",
+                                           "/topics/haveANiceDay")
   }
 
   it should "return none if the configuration file is empty" in {
