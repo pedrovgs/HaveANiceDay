@@ -7,6 +7,7 @@ object Versions {
   val finatraSwagger = "2.10.0"
   val mysqlConnector = "8.0.7-dmr"
   val guice = "4.0"
+  val caseClassy = "0.4.0"
   val scalatest = "3.0.1"
   val mockito = "1.9.5"
 }
