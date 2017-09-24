@@ -34,6 +34,8 @@ libraryDependencies += "com.twitter" %% "inject-modules" % Versions.finatra % Te
 libraryDependencies += "com.google.inject.extensions" % "guice-testlib" % Versions.guice % Test
 libraryDependencies += "org.mockito" % "mockito-core" % Versions.mockito % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
+libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
+libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
 
 flywayUrl := "jdbc:mysql://localhost/haveaniceday"
 flywayUser := "haveaniceday"

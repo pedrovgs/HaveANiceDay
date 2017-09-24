@@ -1,0 +1,8 @@
+{
+  "to" : "anyResource",
+  "data" : {
+    "title" : "title",
+    "message" : "message",
+    "photoUrl" : null
+  }
+}

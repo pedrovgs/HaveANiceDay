@@ -32,9 +32,6 @@ class NotificationsClient @Inject()(config: FirebaseConfig) {
   }
 
   private def generateRequestBody(to: String, notification: Notification): String = {
-    val firebaseNotificationData =
-      FirebaseNotificationData(notification.title, notification.messgae, notification.photoUrl)
-    val firebaseNotification = FirebaseNotification(to, firebaseNotificationData)
-    firebaseNotification.asJson.toString
+    FirebaseNotification.fromNotification(to, notification).asJson.toString
   }
 }

@@ -12,4 +12,6 @@ object Versions {
   val circe = "0.8.0"
   val scalatest = "3.0.1"
   val mockito = "1.9.5"
+  val wiremock = "2.8.0"
+  val scalacheck = "1.13.5"
 }
