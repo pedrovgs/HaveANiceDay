@@ -1,26 +1,25 @@
 package com.github.pedrovgs.haveaniceday.notifications.client
 
 import com.github.pedrovgs.haveaniceday.notifications.client.model._
-import com.github.pedrovgs.haveaniceday.notifications.model.{FirebaseConfig, Notification}
+import com.github.pedrovgs.haveaniceday.notifications.model.{FirebaseConfig, Notification, SendNotificationError}
 import com.google.inject.Inject
 import io.circe.generic.auto._
 import io.circe.syntax._
 
+import scala.concurrent.Future
 import scalaj.http.{Http, HttpRequest, HttpResponse}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class NotificationsClient @Inject()(config: FirebaseConfig) {
 
-  def sendNotification(notification: Notification) = {
-    val response = sendPostRequestToFirebase(notification)
-    if (response.isSuccess) {
-      println("---------------")
-      println("SUCCESS " + response.body)
-      println("---------------")
-    } else {
-      println("---------------")
-      println("ERROR" + response.code)
-      println("ERROR" + response.body)
-      println("---------------")
+  def sendNotificationToEveryUser(notification: Notification): Future[Either[SendNotificationError, Notification]] = {
+    Future {
+      val response = sendPostRequestToFirebase(notification)
+      if (response.isSuccess) {
+        Right(notification)
+      } else {
+        Left(SendNotificationError(response.code, response.body))
+      }
     }
   }
 
@@ -33,12 +32,9 @@ class NotificationsClient @Inject()(config: FirebaseConfig) {
   }
 
   private def generateRequestBody(notification: Notification): String = {
-    println("---------------")
-    println("Notification " + notification)
-    println("---------------")
     val firebaseNotificationData =
       FirebaseNotificationData(notification.title, notification.messgae, notification.photoUrl)
-    val firebaseNotification = FirebaseNotification("", firebaseNotificationData)
+    val firebaseNotification = FirebaseNotification("/topics/haveANiceDay", firebaseNotificationData)
     firebaseNotification.asJson.toString
   }
 }

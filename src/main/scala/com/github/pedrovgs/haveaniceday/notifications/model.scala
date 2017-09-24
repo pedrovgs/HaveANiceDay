@@ -6,4 +6,6 @@ object model {
 
   case class Notification(title: String, messgae: String, photoUrl: Option[String])
 
+  case class SendNotificationError(code: Int, message: String)
+
 }
