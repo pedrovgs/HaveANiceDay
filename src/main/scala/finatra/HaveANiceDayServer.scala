@@ -6,7 +6,7 @@ import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
 import com.twitter.finatra.http.routing.HttpRouter
 import finatra.config.ConfigModule
-import finatra.controllers.RootController
+import finatra.controllers.{NotificationsController, RootController}
 import finatra.swagger.HaveANiceDaySwaggerModule
 import io.swagger.models.Swagger
 
@@ -27,4 +27,5 @@ class HaveANiceDayServer extends HttpServer {
       .filter[CommonFilters]
       .add[DocsController]
       .add[RootController]
+      .add[NotificationsController]
 }
