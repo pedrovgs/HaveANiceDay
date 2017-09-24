@@ -55,6 +55,15 @@ This project handles DB migrations using [Flyway](https://flywaydb.org). All the
 flyway -user=<REDACTED> -password=<REDACTED> -url=jdbc:mysql://<REDACTED> -locations=filesystem:src/main/resources/db/migration migrate
 ```
 
+## Configuration
+
+This project can be configured using different values such as the Firebase configuration API key. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
+
+```
+export FIREBASE_API_KEY="YOUR_FIREBASE_API_KEY"
+``` 
+
+
 ## Contributing
 
 If you would like to contribute code to this repository you can do so through GitHub by creating a new branch in the repository and sending a pull request or opening an issue. Please, remember that there are some requirements you have to pass before accepting your contribution:
