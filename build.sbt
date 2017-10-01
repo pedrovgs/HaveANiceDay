@@ -19,6 +19,7 @@ libraryDependencies += "org.scalaj" %% "scalaj-http" % Versions.scalajHttp
 libraryDependencies += "io.circe" %% "circe-core" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-generic" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-parser" % Versions.circe
+libraryDependencies += "net.ruippeixotog" %% "scala-scraper" % Versions.scalaScraper
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test
