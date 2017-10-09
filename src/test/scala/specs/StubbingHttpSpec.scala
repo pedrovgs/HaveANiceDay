@@ -11,7 +11,7 @@ object StubbingHttpSpec {
   val baseUrl: String = "http://" + host + ":" + port
 }
 
-class StubbingHttpSpec extends FlatSpec with BeforeAndAfter {
+abstract class StubbingHttpSpec extends FlatSpec with BeforeAndAfter {
 
   import StubbingHttpSpec._
 

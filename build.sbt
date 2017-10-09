@@ -19,7 +19,6 @@ libraryDependencies += "org.scalaj" %% "scalaj-http" % Versions.scalajHttp
 libraryDependencies += "io.circe" %% "circe-core" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-generic" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-parser" % Versions.circe
-libraryDependencies += "net.ruippeixotog" %% "scala-scraper" % Versions.scalaScraper
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % Versions.slick,
   "org.slf4j" % "slf4j-nop" % "1.6.4",

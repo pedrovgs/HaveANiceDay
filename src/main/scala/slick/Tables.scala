@@ -19,28 +19,39 @@ trait Tables {
   def ddl = schema
 
   /** Entity class storing rows of table DevelopersTable
-   *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
-   *  @param username Database column username SqlType(VARCHAR), Length(255,true)
-   *  @param email Database column email SqlType(VARCHAR), Length(255,true), Default(None) */
+    *  @param id Database column id SqlType(INT), AutoInc, PrimaryKey
+    *  @param username Database column username SqlType(VARCHAR), Length(255,true)
+    *  @param email Database column email SqlType(VARCHAR), Length(255,true), Default(None) */
   case class DevelopersRow(id: Int, username: String, email: Option[String] = None)
+
   /** GetResult implicit for fetching DevelopersRow objects using plain SQL queries */
-  implicit def GetResultDevelopersRow(implicit e0: GR[Int], e1: GR[String], e2: GR[Option[String]]): GR[DevelopersRow] = GR{
-    prs => import prs._
+  implicit def GetResultDevelopersRow(implicit e0: GR[Int],
+                                      e1: GR[String],
+                                      e2: GR[Option[String]]): GR[DevelopersRow] = GR { prs =>
+    import prs._
     DevelopersRow.tupled((<<[Int], <<[String], <<?[String]))
   }
+
   /** Table description of table developers. Objects of this class serve as prototypes for rows in queries. */
   class DevelopersTable(_tableTag: Tag) extends Table[DevelopersRow](_tableTag, "developers") {
     def * = (id, username, email) <> (DevelopersRow.tupled, DevelopersRow.unapply)
+
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(username), email).shaped.<>({r=>import r._; _1.map(_=> DevelopersRow.tupled((_1.get, _2.get, _3)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? =
+      (Rep.Some(id), Rep.Some(username), email).shaped.<>({ r =>
+        import r._; _1.map(_ => DevelopersRow.tupled((_1.get, _2.get, _3)))
+      }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column id SqlType(INT), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
+
     /** Database column username SqlType(VARCHAR), Length(255,true) */
-    val username: Rep[String] = column[String]("username", O.Length(255,varying=true))
+    val username: Rep[String] = column[String]("username", O.Length(255, varying = true))
+
     /** Database column email SqlType(VARCHAR), Length(255,true), Default(None) */
-    val email: Rep[Option[String]] = column[Option[String]]("email", O.Length(255,varying=true), O.Default(None))
+    val email: Rep[Option[String]] = column[Option[String]]("email", O.Length(255, varying = true), O.Default(None))
   }
+
   /** Collection-like TableQuery object for table DevelopersTable */
   lazy val DevelopersTable = new TableQuery(tag => new DevelopersTable(tag))
 }
