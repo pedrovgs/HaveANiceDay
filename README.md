@@ -55,6 +55,21 @@ This project handles DB migrations using [Flyway](https://flywaydb.org). All the
 flyway -user=<REDACTED> -password=<REDACTED> -url=jdbc:mysql://<REDACTED> -locations=filesystem:src/main/resources/db/migration migrate
 ```
 
+Or if you are working on your laptop you can directly use the following sbt commands:
+
+```
+//Validate database migration
+sbt flywayValidate
+//Clean database and schema
+sbt flywayClean
+//Apply migrations locally
+sbt flywayMigrate
+//Repair database if something has changed in old migrations and the changes are still valid
+sbt flywayRepair
+//Prints the details and status information about all the migrations
+sbt flywayInfo
+```
+
 ## Configuration
 
 This project can be configured using different values such as the Firebase configuration API key. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:

@@ -1,18 +1,30 @@
 language: scala
 scala:
-- 2.12.3
+  - 2.12.3
 jdk:
-- oraclejdk8
+  - oraclejdk8
+
+services:
+  - mysql
 
 cache:
   directories:
     - $HOME/.ivy2/cache
     - $HOME/.sbt/boot/
+
 before_cache:
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
   - find $HOME/.sbt -name "*.lock" -delete
+
+before_install:
+  - mysql -e "create database IF NOT EXISTS zolla;" -uroot
+  - mysql -u root -e "CREATE USER 'zolla'@'localhost' IDENTIFIED BY 'zolla';"
+  - mysql -u root -e "GRANT ALL ON zolla.* TO 'zolla'@'localhost';"
 
 script:
   - sbt scalafmt::test
   - sbt test:scalafmt::test
   - sbt test
+  - sbt flywayClean
+  - sbt flywayMigrate
+  - sbt flywayInfo
