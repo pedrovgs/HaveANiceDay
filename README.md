@@ -21,6 +21,8 @@ To build and test this project you can execute ``sbt test``. You can also use sb
 ~ test-only *AnySpec // Runs specs matching with the filter passed as param.
 ```
 
+You can review the current project coverage by executing ``sbt test coverageReport``.
+
 ## Checkstyle
 
 For the project checkstyle we are using [ScalaFMT](http://scalameta.org/scalafmt/). The code format will be evaluated after accepting any contribution to this repository using this tool. You can easily format your code changes automatically by executing ``sbt format``.
@@ -36,6 +38,10 @@ swagger-codegen generate -i target/swagger/swagger.json -l swift -o ~/Desktop/zo
 ```
 
 The complete documentation of the plugin being used to generate the Swagger specs can be found [here](https://github.com/jakehschwartz/finatra-swagger). 
+
+## Slick DB framework
+
+This project uses [Slick](http://slick.lightbend.com/) to be able to handle DB queries in a functional an easy way. We've configured [slick-codegen](http://slick.lightbend.com/doc/3.2.1/code-generation.html) to generate the FRM code automatically using the DB schema. Todo this you only need to execute ``sbt slickCodeGen`` once the local DB schema is up to date. This will generate a file named ``src/main/scala/slick/Tables.scala`` where you can find all the definition for the tables and the rows used inside.   
 
 ## Docker
 
