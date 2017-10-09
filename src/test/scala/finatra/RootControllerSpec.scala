@@ -10,5 +10,6 @@ class RootControllerSpec extends FeatureTest {
 
   test("Should return OK at the root path") {
     server.httpGet(path = "/", andExpect = Status.Ok)
+
   }
 }

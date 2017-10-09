@@ -21,7 +21,12 @@ To build and test this project you can execute ``sbt test``. You can also use sb
 ~ test-only *AnySpec // Runs specs matching with the filter passed as param.
 ```
 
-You can review the current project coverage by executing ``sbt test coverageReport``.
+You can review the current project coverage by executing: 
+
+```
+sbt coverage test 
+sbt coverageReport
+```
 
 ## Checkstyle
 

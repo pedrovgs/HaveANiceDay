@@ -9,6 +9,7 @@ import finatra.config.ConfigModule
 import finatra.controllers.{NotificationsController, RootController}
 import finatra.swagger.HaveANiceDaySwaggerModule
 import io.swagger.models.Swagger
+import slick.SlickModule
 
 object HaveANiceDayServerMain extends HaveANiceDayServer
 
@@ -18,7 +19,7 @@ class HaveANiceDayServer extends HttpServer {
 
   override protected def defaultFinatraHttpPort = ":9000"
 
-  override protected def modules = Seq(HaveANiceDaySwaggerModule, ConfigModule)
+  override protected def modules = Seq(HaveANiceDaySwaggerModule, ConfigModule, SlickModule)
 
   override protected def configureHttp(router: HttpRouter): Unit =
     router

@@ -25,6 +25,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick
 )
 libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % Versions.slick
+libraryDependencies += "com.h2database" % "h2" % Versions.h2database
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test
@@ -42,8 +43,6 @@ libraryDependencies += "org.mockito" % "mockito-core" % Versions.mockito % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
 libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
 libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
-
-coverageEnabled := true
 
 val dbUrl = "jdbc:mysql://localhost/haveaniceday?characterEncoding=UTF-8&nullNamePatternMatchesAll=true"
 val dbUser = "haveaniceday"
