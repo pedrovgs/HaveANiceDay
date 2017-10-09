@@ -25,7 +25,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick
 )
 libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % Versions.slick
-libraryDependencies += "com.h2database" % "h2" % Versions.h2database
+libraryDependencies += "com.danielasfregola" %% "twitter4s" % Versions.twitter4s
+libraryDependencies += "com.h2database" % "h2" % Versions.h2database % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test
