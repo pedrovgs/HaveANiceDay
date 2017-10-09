@@ -10,7 +10,6 @@ object Versions {
   val caseClassy = "0.4.0"
   val scalajHttp = "2.3.0"
   val circe = "0.8.0"
-  val scalaScraper = "2.0.0"
   val slick = "3.2.1"
   val scalatest = "3.0.1"
   val mockito = "1.9.5"
