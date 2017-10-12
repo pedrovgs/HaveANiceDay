@@ -12,12 +12,11 @@ trait InMemoryDatabase {
 
   lazy val database: Database = {
     val config: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]("inMemorySlick")
-    val db: JdbcBackend#DatabaseDef = config.db
-    val database = Database(config, db)
-    resetDatabase(database)
+    val db: JdbcBackend#DatabaseDef         = config.db
+    Database(config, db)
   }
 
-  private def resetDatabase(database: Database): Database = {
+  def resetDatabase(): Database = {
     Try(dropTables(database))
     createTables(database)
     database
@@ -25,18 +24,15 @@ trait InMemoryDatabase {
 
   private def dropTables(database: Database) = {
     import database.config.profile.api._
-    Await.result(database.db.run(DBIO.seq(
-      Tables.DevelopersTable.schema.drop,
-      Tables.SmilesExtractionsTable.schema.drop))
-      , Duration.Inf
-    )
+    Await.result(
+      database.db.run(DBIO.seq(Tables.DevelopersTable.schema.drop, Tables.SmilesExtractionsTable.schema.drop)),
+      Duration.Inf)
   }
+
   private def createTables(database: Database) = {
     import database.config.profile.api._
-    Await.result(database.db.run(DBIO.seq(
-      Tables.DevelopersTable.schema.create,
-      Tables.SmilesExtractionsTable.schema.create))
-      , Duration.Inf
-    )
+    Await.result(
+      database.db.run(DBIO.seq(Tables.DevelopersTable.schema.create, Tables.SmilesExtractionsTable.schema.create)),
+      Duration.Inf)
   }
 }
