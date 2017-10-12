@@ -1,17 +1,17 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
-import akka.http.scaladsl.model.DateTime
+import org.joda.time.DateTime
 
 object model {
 
-  type SmilesGenerationResult = Either[SmilesGenerationError, Int]
+  type SmilesExtractionResult = Either[SmilesExtractionError, Int]
 
-  sealed trait SmilesGenerationError
+  sealed trait SmilesExtractionError
 
-  case class TryToExtractSmilesTooEarly(date: DateTime)
-  case class UnknownError(message: String) extends SmilesGenerationError
+  case class TryToExtractSmilesTooEarly(date: DateTime) extends SmilesExtractionError
+  case class UnknownError(message: String)              extends SmilesExtractionError
 
-  case class SmilesGeneratorConfig(twitterAccounts: Seq[String], numberOfGenerationsPerDay: Int)
+  case class SmilesGeneratorConfig(twitterAccounts: Seq[String], numberOfExtractionsPerDay: Int)
 
   case class Smile()
 }

@@ -1,6 +1,6 @@
 package com.github.pedrovgs.haveaniceday.utils
 
-import akka.http.scaladsl.model.DateTime
+import org.joda.time.DateTime
 
 class Clock {
 

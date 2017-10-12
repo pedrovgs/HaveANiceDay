@@ -1,16 +1,17 @@
 package com.github.pedrovgs.haveaniceday.smiles.storage
 
-import com.github.pedrovgs.haveaniceday.smiles.model.SmilesGenerationResult
-import com.twitter.util.Future
+import com.github.pedrovgs.haveaniceday.smiles.model.SmilesExtractionResult
 import org.joda.time.DateTime
+
+import scala.concurrent.Future
 
 class SmilesExtractorStorage {
 
-  def getLastSmilesExtraction(): Future[DateTime] = {
+  def getLastSmilesExtraction(): Future[Option[DateTime]] = {
     ???
   }
 
-  def updateLastExtractionStorage(date: DateTime, result: SmilesGenerationResult): Future[DateTime] = {
+  def updateLastExtractionStorage(date: DateTime, result: SmilesExtractionResult): Future[DateTime] = {
     ???
   }
 }
