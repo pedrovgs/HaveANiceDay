@@ -83,10 +83,14 @@ sbt flywayInfo
 
 ## Configuration
 
-This project can be configured using different values such as the Firebase configuration API key. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
+This project can be configured using different values such as the Firebase configuration API key or the Twitter Credentials configuration. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
 
 ```
 export FIREBASE_API_KEY="YOUR_FIREBASE_API_KEY"
+export TWITTER_CONSUMER_KEY="YOUR_TWITTER_CONSUMER_KEY"
+export TWITTER_CONSUMER_SECRET="YOUR_TWITTER_CONSUMER_SECRET"
+export TWITTER_ACCESS_KEY="YOUR_TWITTER_ACCESS_KEY"
+export TWITTER_ACCESS_SECRET="YOUR_TWITTER_ACCESS_SECRET"
 ``` 
 
 ## Contributing
