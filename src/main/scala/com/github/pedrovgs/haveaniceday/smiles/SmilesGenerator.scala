@@ -8,10 +8,11 @@ import com.github.pedrovgs.haveaniceday.smiles.model.{
   SmilesGeneratorConfig,
   TryToExtractSmilesTooEarly
 }
-import com.github.pedrovgs.haveaniceday.smiles.storage.SmilesExtractionsRepository
+import com.github.pedrovgs.haveaniceday.smiles.storage.{SmilesExtractionsRepository, SmilesRepository}
 import com.github.pedrovgs.haveaniceday.utils.Clock
 import org.joda.time
 import org.joda.time.DateTime
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -24,7 +25,8 @@ object SmilesGenerator {
 
 class SmilesGenerator(config: SmilesGeneratorConfig,
                       twitterClient: TwitterClient,
-                      smilesExtractorStorage: SmilesExtractionsRepository,
+                      smilesExtractorRepository: SmilesExtractionsRepository,
+                      smilesRepository: SmilesRepository,
                       clock: Clock) {
 
   import SmilesGenerator._

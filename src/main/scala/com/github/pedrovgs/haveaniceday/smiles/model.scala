@@ -18,7 +18,7 @@ object model {
     val Twitter = Value
   }
 
-  case class Smile(id: Int,
+  case class Smile(id: Long,
                    creationDate: DateTime,
                    photo: Option[String],
                    description: Option[String],
@@ -26,6 +26,6 @@ object model {
                    sourceUrl: String,
                    sent: Boolean,
                    sentDate: Option[DateTime],
-                   smileNumber: Option[Int])
+                   number: Option[Int])
 
 }
