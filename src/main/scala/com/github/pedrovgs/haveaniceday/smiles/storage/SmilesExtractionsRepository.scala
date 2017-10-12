@@ -8,7 +8,7 @@ import slick.Tables.{SmilesExtractionsRow, SmilesExtractionsTable}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SmilesExtractorStorage(database: Database) {
+class SmilesExtractionsRepository(database: Database) {
 
   import database.config.profile.api._
 
