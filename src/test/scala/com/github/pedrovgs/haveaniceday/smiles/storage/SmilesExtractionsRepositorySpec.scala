@@ -1,8 +1,11 @@
 package com.github.pedrovgs.haveaniceday.smiles.storage
 
+import ordering.common._
+import extensions.futures._
 import generators.common._
 import generators.smiles._
-import extensions.futures._
+import org.joda.time.DateTime
+import org.scalacheck.Gen
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 import specs.InMemoryDatabase
@@ -36,6 +39,16 @@ class SmilesExtractionsRepositorySpec
 
       result shouldBe extractionDate
     }
+  }
 
+  it should "return the latest added extraction report date" in {
+    forAll(Gen.nonEmptyListOf(arbitraryDateTime), arbitrarySmilesExtractedCount) { (extractionDates, count) =>
+      extractionDates.foreach { date =>
+        repository.updateLastExtractionStorage(date, count).get
+      }
+
+      repository.getLastSmilesExtraction.get.get shouldBe extractionDates.sorted(Ordering[DateTime].reverse).head
+      resetDatabase()
+    }
   }
 }
