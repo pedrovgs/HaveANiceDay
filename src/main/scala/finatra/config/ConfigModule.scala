@@ -27,10 +27,10 @@ object ConfigModule extends TwitterModule {
   def smilesGeneratorConfig: SmilesGeneratorConfig = {
     val config                = ConfigFactory.load("smilesGenerator.conf")
     val smilesGeneratorConfig = SmilesGeneratorConfigLoader.loadSmilesGeneratorConfig(config)
-    if (smilesGeneratorConfig.isRight) {
-      smilesGeneratorConfig.right.get
+    if (smilesGeneratorConfig.isDefined) {
+      smilesGeneratorConfig.get
     } else {
-      throw new RuntimeException("Wrong firebase configuration found. Review your firebase.conf file")
+      throw new RuntimeException("Wrong smiles generator configuration found. Review your smilesGenerator.conf file")
     }
   }
 }

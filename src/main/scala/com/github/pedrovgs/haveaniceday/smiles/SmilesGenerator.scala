@@ -12,8 +12,8 @@ import com.github.pedrovgs.haveaniceday.smiles.storage.SmilesExtractorStorage
 import com.github.pedrovgs.haveaniceday.utils.Clock
 import org.joda.time
 import org.joda.time.DateTime
-
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object SmilesGenerator {
   private def tooEarlySmilesExtraction(dateTime: DateTime): Future[SmilesExtractionResult] = {

@@ -11,7 +11,7 @@ object model {
   case class TryToExtractSmilesTooEarly(date: DateTime) extends SmilesExtractionError
   case class UnknownError(message: String)              extends SmilesExtractionError
 
-  case class SmilesGeneratorConfig(twitterAccounts: Seq[String], numberOfExtractionsPerDay: Int)
+  case class SmilesGeneratorConfig(twitterAccounts: List[String], numberOfExtractionsPerDay: Int)
 
   case class Smile()
 }
