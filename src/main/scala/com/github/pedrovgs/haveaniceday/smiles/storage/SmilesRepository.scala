@@ -4,8 +4,8 @@ import com.github.pedrovgs.haveaniceday.smiles.model.Smile
 import com.github.pedrovgs.haveaniceday.smiles.storage.codec._
 import slick.Database
 import slick.Tables.{SmilesRow, SmilesTable}
-
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class SmilesRepository(database: Database) {
   import database.config.profile.api._
@@ -17,6 +17,6 @@ class SmilesRepository(database: Database) {
     val inserts = smileRows.map { row =>
       insertQuery += row
     }
-    database.db.run(DBIO.sequence(inserts)).map(asDomain)
+    database.db.run(DBIO.sequence(inserts).transactionally).map(asDomain)
   }
 }

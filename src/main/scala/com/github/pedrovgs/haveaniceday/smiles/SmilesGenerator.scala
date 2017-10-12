@@ -33,7 +33,7 @@ class SmilesGenerator(config: SmilesGeneratorConfig,
 
   def extractSmiles(): Future[SmilesExtractionResult] = {
     for {
-      lastExtractionDate <- smilesExtractorStorage.getLastSmilesExtraction
+      lastExtractionDate <- smilesExtractorRepository.getLastSmilesExtraction
       result <- if (shouldExtractSmiles(lastExtractionDate)) {
         extractSmilesFromTwitterSince(lastExtractionDate)
       } else {

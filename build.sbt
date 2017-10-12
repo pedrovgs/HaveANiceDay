@@ -21,7 +21,6 @@ libraryDependencies += "io.circe" %% "circe-generic" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-parser" % Versions.circe
 libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % Versions.slick,
-  "org.slf4j" % "slf4j-nop" % "1.6.4",
   "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick
 )
 libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % Versions.slick
@@ -44,6 +43,12 @@ libraryDependencies += "org.mockito" % "mockito-core" % Versions.mockito % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
 libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
 libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
+
+parallelExecution in Test := false
+parallelExecution in IntegrationTest := false
+testForkedParallel in Test := false
+testForkedParallel in IntegrationTest := false
+concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
 
 val dbUrl = "jdbc:mysql://localhost/haveaniceday?characterEncoding=UTF-8&nullNamePatternMatchesAll=true"
 val dbUser = "haveaniceday"

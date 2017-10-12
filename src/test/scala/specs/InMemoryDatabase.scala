@@ -7,10 +7,13 @@ import slick.{Database, Tables}
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Try
+
 object InMemoryDatabase {
   val tables = Seq(Tables.DevelopersTable, Tables.SmilesExtractionsTable, Tables.SmilesTable)
 }
+
 trait InMemoryDatabase {
+
   import InMemoryDatabase._
 
   lazy val database: Database = {
@@ -20,20 +23,22 @@ trait InMemoryDatabase {
   }
 
   def resetDatabase(): Database = {
-    Try(dropTables(database))
+    dropTables(database)
     createTables(database)
     database
   }
 
   private def dropTables(database: Database) = {
     import database.config.profile.api._
-    val dropTablesQuery = DBIO.seq(tables.reverseMap(_.schema.drop): _*)
-    Await.result(database.db.run(dropTablesQuery), Duration.Inf)
+    tables.map(_.schema.drop).foreach { query =>
+      Try(Await.result(database.db.run(query), Duration.Inf))
+    }
   }
 
   private def createTables(database: Database) = {
     import database.config.profile.api._
-    val createTablesQuery = DBIO.seq(tables.map(_.schema.create): _*)
-    Await.result(database.db.run(createTablesQuery), Duration.Inf)
+    tables.map(_.schema.create).foreach { query =>
+      Try(Await.result(database.db.run(query), Duration.Inf))
+    }
   }
 }
