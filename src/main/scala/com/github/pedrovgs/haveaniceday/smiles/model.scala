@@ -9,9 +9,23 @@ object model {
   sealed trait SmilesExtractionError
 
   case class TryToExtractSmilesTooEarly(date: DateTime) extends SmilesExtractionError
-  case class UnknownError(message: String)              extends SmilesExtractionError
+
+  case class UnknownError(message: String) extends SmilesExtractionError
 
   case class SmilesGeneratorConfig(twitterAccounts: List[String], numberOfExtractionsPerDay: Int)
 
-  case class Smile()
+  object Source extends Enumeration {
+    val Twitter = Value
+  }
+
+  case class Smile(id: Int,
+                   creationDate: DateTime,
+                   photo: Option[String],
+                   description: Option[String],
+                   source: Source.Value,
+                   sourceUrl: String,
+                   sent: Boolean,
+                   sentDate: Option[DateTime],
+                   smileNumber: Option[Int])
+
 }

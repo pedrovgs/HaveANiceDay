@@ -8,7 +8,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Try
 object InMemoryDatabase {
-  val tables = Seq(Tables.DevelopersTable, Tables.SmilesExtractionsTable)
+  val tables = Seq(Tables.DevelopersTable, Tables.SmilesExtractionsTable, Tables.SmilesTable)
 }
 trait InMemoryDatabase {
   import InMemoryDatabase._
