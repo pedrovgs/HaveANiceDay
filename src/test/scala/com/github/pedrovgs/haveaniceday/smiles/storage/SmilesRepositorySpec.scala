@@ -33,7 +33,7 @@ class SmilesRepositorySpec
     }
   }
 
-  private def assertSmilesAreSavedProperly(smiles: List[model.Smile], savedSmiles: Seq[model.Smile]) = {
+  private def assertSmilesAreSavedProperly(smiles: List[model.Smile], savedSmiles: Seq[model.Smile]): Unit = {
     val sortedSmiles      = smiles.sortBy(_.sourceUrl)
     val sortedSavedSmiles = savedSmiles.sortBy(_.sourceUrl)
     sortedSmiles.length shouldBe sortedSavedSmiles.length
