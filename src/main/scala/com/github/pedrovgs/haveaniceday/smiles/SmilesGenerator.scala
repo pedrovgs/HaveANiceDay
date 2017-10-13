@@ -71,9 +71,9 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
     val lastSmileSentFuture = smilesRepository.getLastSmileSent()
     lastSmileSentFuture.zip(notificationsClient.sendNotificationToEveryUser(notification)).map {
       case (lastSmileSent, Right(_)) =>
-        val smileNumber: Int = lastSmileSent.flatMap(_.number.map(_ + 1)).getOrElse(1)
-        smile.copy(sent = true, sentDate = Some(clock.now), number = Some(smileNumber))
-        Right(smile)
+        val smileNumber: Int   = lastSmileSent.flatMap(_.number.map(_ + 1)).getOrElse(1)
+        val smiledMarkedAsSent = smile.copy(sent = true, sentDate = Some(clock.now), number = Some(smileNumber))
+        Right(smileMarkedAsSent)
       case (_, Left(error)) =>
         Left(UnknownError(
           s"Something went wrong while sending the notification. Error code: ${error.code} Error message: ${error.message}"))

@@ -41,7 +41,7 @@ class SmilesRepository @Inject()(database: Database) {
   }
 
   def update(smile: Smile): Future[Smile] = {
-    val query = SmilesTable.filterNot(row => row.id === smile.id).update(smile)
+    val query = SmilesTable.filter(row => row.id === smile.id).update(smile)
     database.db.run(query).map(_ => smile)
   }
 }

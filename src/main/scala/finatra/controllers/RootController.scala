@@ -45,6 +45,6 @@ class RootController @Inject()(s: Swagger, smilesGenerator: SmilesGenerator) ext
 
   private def isLocalhostRequest(request: Request) = {
     val host = request.host.getOrElse("")
-    host == "localhost:9000" || host == "localhost"
+    host.startsWith("localhost")
   }
 }
