@@ -1,6 +1,6 @@
 package com.github.pedrovgs.haveaniceday.smiles.storage
 
-import com.github.pedrovgs.haveaniceday.extensions.datetime._
+import com.github.pedrovgs.haveaniceday.extensions.sqldate._
 import com.github.pedrovgs.haveaniceday.smiles.model.{Smile, Source}
 import slick.Tables.SmilesRow
 

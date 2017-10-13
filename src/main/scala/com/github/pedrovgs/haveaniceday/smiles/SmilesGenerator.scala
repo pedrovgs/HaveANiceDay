@@ -48,7 +48,7 @@ class SmilesGenerator(config: SmilesGeneratorConfig,
     val minimumDifferenceInHours: Int = 24 / numberOfTriesPerDay
     val now                           = clock.now
 
-    def hasElapsedTheMinimumAmountOfTimeSinceTheLastExtraction(lastExtractionDate: time.DateTime) = {
+    def hasElapsedTheMinimumAmountOfTimeSinceTheLastExtraction(lastExtractionDate: DateTime) = {
       TimeUnit.MILLISECONDS.toHours(now.getMillis - lastExtractionDate.getMillis) >= minimumDifferenceInHours
     }
 
@@ -60,7 +60,8 @@ class SmilesGenerator(config: SmilesGeneratorConfig,
 
   private def extractSmilesFromTwitterSince(date: Option[DateTime]): Future[SmilesExtractionResult] = {
     val extractionDate = date.getOrElse(clock.now.minusMonths(1))
-    twitterClient.smilesFrom(extractionDate).flatMap {
+    val accounts       = config.twitterAccounts
+    twitterClient.smilesFrom(accounts, extractionDate).flatMap {
       case Right(smiles) =>
         for {
           savedSmiles <- smilesRepository.saveSmiles(smiles)

@@ -1,6 +1,6 @@
 package com.github.pedrovgs.haveaniceday.smiles.storage
 
-import com.github.pedrovgs.haveaniceday.extensions.datetime._
+import com.github.pedrovgs.haveaniceday.extensions.sqldate._
 import org.joda.time.DateTime
 import slick.Database
 import slick.Tables.{SmilesExtractionsRow, SmilesExtractionsTable}

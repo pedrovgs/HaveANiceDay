@@ -4,7 +4,7 @@ import java.sql.{Date, Timestamp}
 
 import org.joda.time.DateTime
 
-object datetime {
+object sqldate {
 
   implicit def dateTimeToTimestamp(dateTime: DateTime): Timestamp =
     new Timestamp(dateTime.toDate.getTime)
