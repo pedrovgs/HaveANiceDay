@@ -1,7 +1,7 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
 import java.util.concurrent.TimeUnit
-
+import com.twitter.inject.Logging
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
 import com.github.pedrovgs.haveaniceday.smiles.model.{
   SmilesExtractionResult,
@@ -27,7 +27,8 @@ class SmilesGenerator(config: SmilesGeneratorConfig,
                       twitterClient: TwitterClient,
                       smilesExtractorRepository: SmilesExtractionsRepository,
                       smilesRepository: SmilesRepository,
-                      clock: Clock) {
+                      clock: Clock)
+    extends Logging {
 
   import SmilesGenerator._
 
@@ -59,7 +60,16 @@ class SmilesGenerator(config: SmilesGeneratorConfig,
 
   private def extractSmilesFromTwitterSince(date: Option[DateTime]): Future[SmilesExtractionResult] = {
     val extractionDate = date.getOrElse(clock.now.minusMonths(1))
-    ???
+    twitterClient.smilesFrom(extractionDate).flatMap {
+      case Right(smiles) =>
+        for {
+          savedSmiles <- smilesRepository.saveSmiles(smiles)
+          _           <- smilesExtractorRepository.updateLastExtractionStorage(clock.now, savedSmiles.length)
+        } yield Right(savedSmiles)
+      case Left(extractionError) =>
+        error(s"Error extracting smiles from twitter: $extractionError")
+        Future.successful(Left(extractionError))
+    }
   }
 
 }

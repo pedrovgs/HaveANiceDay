@@ -4,11 +4,18 @@ import org.joda.time.DateTime
 
 object model {
 
-  type SmilesExtractionResult = Either[SmilesExtractionError, Int]
+  type SmilesExtractionResult = Either[SmilesExtractionError, Seq[Smile]]
 
-  sealed trait SmilesExtractionError
+  sealed trait SmilesExtractionError {
+    val message: String
 
-  case class TryToExtractSmilesTooEarly(date: DateTime) extends SmilesExtractionError
+    override def toString: String = message
+  }
+
+  case class TryToExtractSmilesTooEarly(date: DateTime) extends SmilesExtractionError {
+    override val message: String =
+      s"Try to extract smiles too soon. Extraction date $date. Review your cron jobs configuration."
+  }
 
   case class UnknownError(message: String) extends SmilesExtractionError
 
