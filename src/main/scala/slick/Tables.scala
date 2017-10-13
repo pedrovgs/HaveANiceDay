@@ -104,6 +104,7 @@ trait Tables {
     *  @param description Database column description SqlType(VARCHAR), Length(280,true), Default(None)
     *  @param source Database column source SqlType(VARCHAR), Length(255,true)
     *  @param sourceUrl Database column source_url SqlType(VARCHAR), Length(2083,true)
+    *  @param numberOfLikes Database column number_of_likes SqlType(BIGINT)
     *  @param sent Database column sent SqlType(BIT)
     *  @param sentDate Database column sent_date SqlType(DATETIME), Default(None)
     *  @param smileNumber Database column smile_number SqlType(INT), Default(None) */
@@ -113,6 +114,7 @@ trait Tables {
                        description: Option[String] = None,
                        source: String,
                        sourceUrl: String,
+                       numberOfLikes: Long,
                        sent: Boolean,
                        sentDate: Option[java.sql.Timestamp] = None,
                        smileNumber: Option[Int] = None)
@@ -133,6 +135,7 @@ trait Tables {
        <<?[String],
        <<[String],
        <<[String],
+       <<[Long],
        <<[Boolean],
        <<?[java.sql.Timestamp],
        <<?[Int]))
@@ -141,7 +144,7 @@ trait Tables {
   /** Table description of table smiles. Objects of this class serve as prototypes for rows in queries. */
   class SmilesTable(_tableTag: Tag) extends Table[SmilesRow](_tableTag, "smiles") {
     def * =
-      (id, creationDate, photoUrl, description, source, sourceUrl, sent, sentDate, smileNumber) <> (SmilesRow.tupled, SmilesRow.unapply)
+      (id, creationDate, photoUrl, description, source, sourceUrl, numberOfLikes, sent, sentDate, smileNumber) <> (SmilesRow.tupled, SmilesRow.unapply)
 
     /** Maps whole row to an option. Useful for outer joins. */
     def ? =
@@ -151,11 +154,12 @@ trait Tables {
        description,
        Rep.Some(source),
        Rep.Some(sourceUrl),
+       Rep.Some(numberOfLikes),
        Rep.Some(sent),
        sentDate,
        smileNumber).shaped.<>(
         { r =>
-          import r._; _1.map(_ => SmilesRow.tupled((_1.get, _2.get, _3, _4, _5.get, _6.get, _7.get, _8, _9)))
+          import r._; _1.map(_ => SmilesRow.tupled((_1.get, _2.get, _3, _4, _5.get, _6.get, _7.get, _8.get, _9, _10)))
         },
         (_: Any) => throw new Exception("Inserting into ? projection not supported.")
       )
@@ -179,6 +183,9 @@ trait Tables {
 
     /** Database column source_url SqlType(VARCHAR), Length(2083,true) */
     val sourceUrl: Rep[String] = column[String]("source_url", O.Length(2083, varying = true))
+
+    /** Database column number_of_likes SqlType(BIGINT) */
+    val numberOfLikes: Rep[Long] = column[Long]("number_of_likes")
 
     /** Database column sent SqlType(BIT) */
     val sent: Rep[Boolean] = column[Boolean]("sent")

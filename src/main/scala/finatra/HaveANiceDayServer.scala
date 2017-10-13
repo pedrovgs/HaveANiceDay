@@ -1,5 +1,6 @@
 package finatra
 
+import com.github.pedrovgs.haveaniceday.smiles.model.SmilesGeneratorConfig
 import com.jakehschwartz.finatra.swagger.DocsController
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
@@ -14,22 +15,33 @@ import org.quartz.impl.StdSchedulerFactory
 import org.quartz.TriggerBuilder._
 import org.quartz.SimpleScheduleBuilder._
 import org.quartz.JobBuilder._
+import org.quartz.Scheduler
 import quartz.smiles.ExtractSmilesJob
 
 object HaveANiceDayServerMain extends HaveANiceDayServer {
+
+  var sharedInstance: HaveANiceDayServer = _
+
   protected override def postInjectorStartup(): Unit = {
-    val scheduler        = StdSchedulerFactory.getDefaultScheduler
+    sharedInstance = this
+    val scheduler = StdSchedulerFactory.getDefaultScheduler
+    val config    = injector.instance[SmilesGeneratorConfig]
+    configureExtractSmilesJob(scheduler, config)
+    scheduler.start()
+  }
+
+  private def configureExtractSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
     val extractSmilesJob = newJob(classOf[ExtractSmilesJob]).build()
+    val intervalInHours  = 24 / config.numberOfExtractionsPerDay
     val trigger = newTrigger()
-      .withIdentity("Once a day", "HaveANiceDay")
+      .withIdentity("SmilesExtractor")
       .startNow()
       .withSchedule(
         simpleSchedule()
-          .withIntervalInSeconds(1) //TODO: Get this value from the configuration
+          .withIntervalInHours(intervalInHours)
           .repeatForever())
       .build()
     scheduler.scheduleJob(extractSmilesJob, trigger)
-    scheduler.start()
   }
 }
 

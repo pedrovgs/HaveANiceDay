@@ -13,7 +13,9 @@ object common {
 
   val arbitraryId: Gen[Long] = arbitrary[Long].map(Math.abs(_) + 1)
 
-  val arbitraryPositiveInt: Gen[Int] = arbitrary[Int].map(Math.abs(_) + 1)
+  val arbitraryPositiveInt: Gen[Int] = arbitrary[Int].map(Math.abs)
+
+  val arbitraryPositiveLong: Gen[Long] = arbitrary[Long].map(Math.abs)
 
   val arbitraryUrl: Gen[String] = {
     val arbitraryLongUrl = for {

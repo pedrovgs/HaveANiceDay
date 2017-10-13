@@ -1,6 +1,8 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
 import com.twitter.inject.Logging
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
 import com.github.pedrovgs.haveaniceday.smiles.model.{
@@ -23,11 +25,11 @@ object SmilesGenerator {
   }
 }
 
-class SmilesGenerator(config: SmilesGeneratorConfig,
-                      twitterClient: TwitterClient,
-                      smilesExtractorRepository: SmilesExtractionsRepository,
-                      smilesRepository: SmilesRepository,
-                      clock: Clock)
+class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
+                                twitterClient: TwitterClient,
+                                smilesExtractorRepository: SmilesExtractionsRepository,
+                                smilesRepository: SmilesRepository,
+                                clock: Clock)
     extends Logging {
 
   import SmilesGenerator._
@@ -54,7 +56,7 @@ class SmilesGenerator(config: SmilesGeneratorConfig,
 
     lastExtractionDate match {
       case Some(date) => hasElapsedTheMinimumAmountOfTimeSinceTheLastExtraction(date)
-      case _          => false
+      case _          => true
     }
   }
 

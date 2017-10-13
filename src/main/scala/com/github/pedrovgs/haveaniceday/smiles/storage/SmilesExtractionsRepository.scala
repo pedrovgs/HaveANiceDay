@@ -1,5 +1,7 @@
 package com.github.pedrovgs.haveaniceday.smiles.storage
 
+import javax.inject.Inject
+
 import com.github.pedrovgs.haveaniceday.extensions.sqldate._
 import org.joda.time.DateTime
 import slick.Database
@@ -8,7 +10,7 @@ import slick.Tables.{SmilesExtractionsRow, SmilesExtractionsTable}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SmilesExtractionsRepository(database: Database) {
+class SmilesExtractionsRepository @Inject()(database: Database) {
 
   import database.config.profile.api._
 

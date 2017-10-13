@@ -13,6 +13,7 @@ object codec {
               smile.description,
               smile.source.toString,
               smile.sourceUrl,
+              smile.numberOfLikes,
               smile.sent,
               smile.sentDate,
               smile.number)
@@ -20,15 +21,18 @@ object codec {
   implicit def asRow(smiles: Seq[Smile]): Seq[SmilesRow] = smiles.map(asRow)
 
   implicit def asDomain(row: SmilesRow): Smile =
-    Smile(row.id,
-          row.creationDate,
-          row.photoUrl,
-          row.description,
-          Source.withName(row.source),
-          row.sourceUrl,
-          row.sent,
-          row.sentDate,
-          row.smileNumber)
+    Smile(
+      row.id,
+      row.creationDate,
+      row.photoUrl,
+      row.description,
+      Source.withName(row.source),
+      row.sourceUrl,
+      row.numberOfLikes,
+      row.sent,
+      row.sentDate,
+      row.smileNumber
+    )
 
   implicit def asDomain(rows: Seq[SmilesRow]): Seq[Smile] = rows.map(asDomain)
 }

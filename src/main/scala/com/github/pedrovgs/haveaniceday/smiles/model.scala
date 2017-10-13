@@ -31,6 +31,7 @@ object model {
                    description: Option[String],
                    source: Source.Value,
                    sourceUrl: String,
+                   numberOfLikes: Long,
                    sent: Boolean,
                    sentDate: Option[DateTime],
                    number: Option[Int])
