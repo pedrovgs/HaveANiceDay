@@ -23,7 +23,7 @@ object HaveANiceDayServerMain extends HaveANiceDayServer {
 
   var sharedInstance: HaveANiceDayServer = _
 
-  protected override def postInjectorStartup(): Unit = {
+  protected override def postWarmup(): Unit = {
     sharedInstance = this
     val scheduler = StdSchedulerFactory.getDefaultScheduler
     val config    = injector.instance[SmilesGeneratorConfig]
