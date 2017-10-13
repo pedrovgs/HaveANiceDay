@@ -19,7 +19,9 @@ object model {
 
   case class UnknownError(message: String) extends SmilesExtractionError
 
-  case class SmilesGeneratorConfig(twitterAccounts: List[String], numberOfExtractionsPerDay: Int)
+  case class SmilesGeneratorConfig(twitterAccounts: List[String],
+                                   numberOfExtractionsPerDay: Int,
+                                   generation24Hour: Int)
 
   object Source extends Enumeration {
     val Twitter = Value

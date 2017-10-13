@@ -12,6 +12,7 @@ class SmilesGeneratorLoaderConfigSpec extends FlatSpec with Matchers {
 
     smilesGeneratorConfig.twitterAccounts shouldBe List("818887507169247232")
     smilesGeneratorConfig.numberOfExtractionsPerDay shouldBe 1
+    smilesGeneratorConfig.generation24Hour shouldBe 10
   }
 
   it should "return none if the configuration does not exist" in {

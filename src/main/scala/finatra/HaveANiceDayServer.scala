@@ -15,8 +15,9 @@ import org.quartz.impl.StdSchedulerFactory
 import org.quartz.TriggerBuilder._
 import org.quartz.SimpleScheduleBuilder._
 import org.quartz.JobBuilder._
+import org.quartz.CronScheduleBuilder._
 import org.quartz.Scheduler
-import quartz.smiles.ExtractSmilesJob
+import quartz.smiles.{ExtractSmilesJob, GenerateSmilesJob}
 
 object HaveANiceDayServerMain extends HaveANiceDayServer {
 
@@ -27,6 +28,7 @@ object HaveANiceDayServerMain extends HaveANiceDayServer {
     val scheduler = StdSchedulerFactory.getDefaultScheduler
     val config    = injector.instance[SmilesGeneratorConfig]
     configureExtractSmilesJob(scheduler, config)
+    configureGenerateSmilesJob(scheduler, config)
     scheduler.start()
   }
 
@@ -42,6 +44,16 @@ object HaveANiceDayServerMain extends HaveANiceDayServer {
           .repeatForever())
       .build()
     scheduler.scheduleJob(extractSmilesJob, trigger)
+  }
+
+  private def configureGenerateSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
+    val generateSmilesJob = newJob(classOf[GenerateSmilesJob]).build()
+    val hour              = config.generation24Hour
+    val trigger = newTrigger()
+      .withIdentity("SmilesGenerator")
+      .withSchedule(cronSchedule(s"0 0 $hour ? * *"))
+      .build()
+    scheduler.scheduleJob(generateSmilesJob, trigger)
   }
 }
 
