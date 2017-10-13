@@ -30,4 +30,10 @@ object common {
       size  <- Gen.choose(0, maxSize)
       value <- Gen.listOfN(size, Gen.alphaNumChar)
     } yield value.mkString("")
+
+  def arbitraryStrBetweenSize(minSize: Int, maxSize: Int) =
+    for {
+      size  <- Gen.choose(minSize, maxSize)
+      value <- Gen.listOfN(size, Gen.alphaNumChar)
+    } yield value.mkString("")
 }
