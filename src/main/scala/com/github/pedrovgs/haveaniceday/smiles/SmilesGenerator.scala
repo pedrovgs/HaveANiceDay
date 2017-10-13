@@ -5,11 +5,7 @@ import javax.inject.Inject
 
 import com.twitter.inject.Logging
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
-import com.github.pedrovgs.haveaniceday.smiles.model.{
-  SmilesExtractionResult,
-  SmilesGeneratorConfig,
-  TryToExtractSmilesTooEarly
-}
+import com.github.pedrovgs.haveaniceday.smiles.model.{SmilesExtractionResult, SmilesGenerationResult, SmilesGeneratorConfig, TryToExtractSmilesTooEarly}
 import com.github.pedrovgs.haveaniceday.smiles.storage.{SmilesExtractionsRepository, SmilesRepository}
 import com.github.pedrovgs.haveaniceday.utils.Clock
 import org.joda.time
@@ -43,6 +39,10 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
         tooEarlySmilesExtraction(clock.now)
       }
     } yield result
+  }
+
+  def generateSmiles(): Future[SmilesGenerationResult] = {
+    ???
   }
 
   private def shouldExtractSmiles(lastExtractionDate: Option[DateTime]): Boolean = {

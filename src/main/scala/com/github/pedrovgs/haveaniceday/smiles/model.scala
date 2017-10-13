@@ -5,8 +5,15 @@ import org.joda.time.DateTime
 object model {
 
   type SmilesExtractionResult = Either[SmilesExtractionError, Seq[Smile]]
+  type SmilesGenerationResult = Either[SmilesGenerationError, Seq[Smile]]
 
   sealed trait SmilesExtractionError {
+    val message: String
+
+    override def toString: String = message
+  }
+
+  sealed trait SmilesGenerationError {
     val message: String
 
     override def toString: String = message
@@ -17,7 +24,12 @@ object model {
       s"Try to extract smiles too soon. Extraction date $date. Review your cron jobs configuration."
   }
 
-  case class UnknownError(message: String) extends SmilesExtractionError
+  case class NoExtractedSmilesFound() extends SmilesGenerationError {
+    override val message: String =
+      s"Try to extract generate smiles but there are no smiles generated previously."
+  }
+
+  case class UnknownError(message: String) extends SmilesExtractionError with SmilesGenerationError
 
   case class SmilesGeneratorConfig(twitterAccounts: List[String],
                                    numberOfExtractionsPerDay: Int,
