@@ -10,8 +10,28 @@ import finatra.controllers.{NotificationsController, RootController}
 import finatra.swagger.HaveANiceDaySwaggerModule
 import io.swagger.models.Swagger
 import slick.SlickModule
+import org.quartz.impl.StdSchedulerFactory
+import org.quartz.TriggerBuilder._
+import org.quartz.SimpleScheduleBuilder._
+import org.quartz.JobBuilder._
+import quartz.smiles.ExtractSmilesJob
 
-object HaveANiceDayServerMain extends HaveANiceDayServer
+object HaveANiceDayServerMain extends HaveANiceDayServer {
+  protected override def postInjectorStartup(): Unit = {
+    val scheduler        = StdSchedulerFactory.getDefaultScheduler
+    val extractSmilesJob = newJob(classOf[ExtractSmilesJob]).build()
+    val trigger = newTrigger()
+      .withIdentity("Once a day", "HaveANiceDay")
+      .startNow()
+      .withSchedule(
+        simpleSchedule()
+          .withIntervalInSeconds(1) //TODO: Get this value from the configuration
+          .repeatForever())
+      .build()
+    scheduler.scheduleJob(extractSmilesJob, trigger)
+    scheduler.start()
+  }
+}
 
 object HaveANiceDaySwagger extends Swagger
 

@@ -25,6 +25,8 @@ libraryDependencies ++= Seq(
 )
 libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % Versions.slick
 libraryDependencies += "com.danielasfregola" %% "twitter4s" % Versions.twitter4s
+libraryDependencies += "org.quartz-scheduler" % "quartz" % Versions.quartz
+libraryDependencies += "org.quartz-scheduler" % "quartz-jobs" % Versions.quartz
 libraryDependencies += "com.h2database" % "h2" % Versions.h2database % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test

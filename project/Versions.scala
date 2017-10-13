@@ -12,6 +12,7 @@ object Versions {
   val circe = "0.8.0"
   val slick = "3.2.1"
   val twitter4s = "5.1"
+  val quartz = "2.2.1"
   val h2database = "1.4.196"
   val scalatest = "3.0.1"
   val mockito = "1.9.5"

@@ -29,7 +29,7 @@ class TwitterClient {
   private def toSmiles(extractionDate: DateTime, timeline: RatedData[Seq[Tweet]]): Seq[Smile] = {
     val validTweets = timeline.data.filter(_.created_at.compareTo(extractionDate.toDate) < 0)
     validTweets.map { tweet =>
-      val url   = "TODO"
+      val url   = "TODO" //TODO: Extract URL here for tweets using the user id and the id. Debug and review the values :)
       val photo = tweet.extended_entities.flatMap(_.media.headOption.map(_.display_url))
       Smile(tweet.id, tweet.created_at, photo, Some(tweet.text), Source.Twitter, url, sent = false, None, None)
     }
