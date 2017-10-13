@@ -5,7 +5,12 @@ import javax.inject.Inject
 
 import com.twitter.inject.Logging
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
-import com.github.pedrovgs.haveaniceday.smiles.model.{SmilesExtractionResult, SmilesGenerationResult, SmilesGeneratorConfig, TryToExtractSmilesTooEarly}
+import com.github.pedrovgs.haveaniceday.smiles.model.{
+  SmilesExtractionResult,
+  SmilesGenerationResult,
+  SmilesGeneratorConfig,
+  TryToExtractSmilesTooEarly
+}
 import com.github.pedrovgs.haveaniceday.smiles.storage.{SmilesExtractionsRepository, SmilesRepository}
 import com.github.pedrovgs.haveaniceday.utils.Clock
 import org.joda.time
