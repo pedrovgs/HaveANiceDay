@@ -44,6 +44,12 @@ libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Tes
 libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
 libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
 
+parallelExecution in Test := false
+parallelExecution in IntegrationTest := false
+testForkedParallel in Test := false
+testForkedParallel in IntegrationTest := false
+concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
+
 val dbUrl = "jdbc:mysql://localhost/haveaniceday?characterEncoding=UTF-8&nullNamePatternMatchesAll=true"
 val dbUser = "haveaniceday"
 val dbPass = "haveaniceday"
