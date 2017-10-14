@@ -6,7 +6,11 @@ import com.github.pedrovgs.haveaniceday.notifications.client.NotificationsClient
 import com.github.pedrovgs.haveaniceday.notifications.model.Notification
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
 import com.github.pedrovgs.haveaniceday.smiles.model._
-import com.github.pedrovgs.haveaniceday.smiles.storage.{SmilesExtractionsRepository, SmilesRepository}
+import com.github.pedrovgs.haveaniceday.smiles.storage.{
+  SmilesExtractionsRepository,
+  SmilesGenerationsRepository,
+  SmilesRepository
+}
 import com.github.pedrovgs.haveaniceday.utils.Clock
 import com.twitter.inject.Logging
 import org.joda.time.DateTime
@@ -17,6 +21,7 @@ import scala.concurrent.Future
 class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
                                 twitterClient: TwitterClient,
                                 smilesExtractorRepository: SmilesExtractionsRepository,
+                                smilesGenerationRepository: SmilesGenerationsRepository,
                                 smilesRepository: SmilesRepository,
                                 notificationsClient: NotificationsClient,
                                 clock: Clock)
@@ -34,7 +39,7 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
         case Some(smile) => sendSmileAndMarkItAsSent(smile)
         case None        => Future.successful(Left(NoExtractedSmilesFound))
       }
-      _ <- saveSmileGenerationResult(result)
+      _ <- smilesGenerationRepository.saveLastGenerationStorage(result)
     } yield result
 
   }
@@ -90,10 +95,6 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
         error(s"Error extracting smiles from twitter: $extractionError")
         Future.successful(Left(extractionError))
     }
-  }
-
-  private def saveSmileGenerationResult(result: SmilesGenerationResult): Future[SmilesGenerationResult] = {
-    ???
   }
 
 }
