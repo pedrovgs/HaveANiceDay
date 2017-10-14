@@ -64,20 +64,27 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
   }
 
   private def sendSmile(smile: Smile): Future[SmilesGenerationResult] = {
-    val title               = "Have a nice day 😃"
-    val message             = smile.description.getOrElse(title)
-    val photoUrl            = smile.photo
-    val notification        = Notification(title, message, photoUrl)
-    val lastSmileSentFuture = smilesRepository.getLastSmileSent()
-    lastSmileSentFuture.zip(notificationsClient.sendNotificationToEveryUser(notification)).map {
-      case (lastSmileSent, Right(_)) =>
-        val smileNumber: Int  = lastSmileSent.flatMap(_.number.map(_ + 1)).getOrElse(1)
-        val smileMarkedAsSent = smile.copy(sent = true, sentDate = Some(clock.now), number = Some(smileNumber))
-        Right(smileMarkedAsSent)
-      case (_, Left(error)) =>
-        Left(UnknownError(
-          s"Something went wrong while sending the notification. Error code: ${error.code} Error message: ${error.message}"))
-    }
+    for {
+      lastSmileSent <- smilesRepository.getLastSmileSent()
+      smileNumber: Int = lastSmileSent.flatMap(_.number.map(_ + 1)).getOrElse(1)
+      notification     = generateNotificationFromSmile(smile, smileNumber)
+      sendNotificationResult <- notificationsClient.sendNotificationToEveryUser(notification)
+    } yield
+      sendNotificationResult match {
+        case Right(_) =>
+          val smileMarkedAsSent = smile.copy(sent = true, sentDate = Some(clock.now), number = Some(smileNumber))
+          Right(smileMarkedAsSent)
+        case Left(error) =>
+          Left(UnknownError(
+            s"Something went wrong while sending the notification. Error code: ${error.code} Error message: ${error.message}"))
+      }
+  }
+
+  private def generateNotificationFromSmile(smile: Smile, smileNumber: Int): Notification = {
+    val title    = s"Have a nice day #$smileNumber 😃"
+    val message  = smile.description.getOrElse(title)
+    val photoUrl = smile.photo
+    Notification(title, message, photoUrl)
   }
 
   private def shouldExtractSmiles(lastExtractionDate: Option[DateTime]): Boolean = {
