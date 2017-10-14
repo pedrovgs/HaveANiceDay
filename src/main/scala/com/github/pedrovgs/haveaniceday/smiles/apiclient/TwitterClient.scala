@@ -12,7 +12,12 @@ import org.joda.time.DateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+object TwitterClient {
+  private val hashtagRegex = "#\\w\\w+"
+  private val urlRegex     = "/^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$/"
+}
 class TwitterClient @Inject()() extends Logging {
+  import TwitterClient._
 
   private val restClient = TwitterRestClient()
 
@@ -40,10 +45,11 @@ class TwitterClient @Inject()() extends Logging {
       val url           = s"https://twitter.com/${tweet.user.get.screen_name}/status/${tweet.id}"
       val photo         = tweet.extended_entities.flatMap(_.media.headOption.map(_.media_url_https))
       val numberOfLikes = tweet.favorite_count + tweet.retweet_count
+      val description   = tweet.text.replaceAll(hashtagRegex, "").replace(urlRegex, "")
       Smile(tweet.id,
             tweet.created_at,
             photo,
-            Some(tweet.text),
+            Some(description),
             Source.Twitter,
             url,
             numberOfLikes,
