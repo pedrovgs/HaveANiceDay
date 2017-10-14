@@ -8,7 +8,7 @@ import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceI
 import com.twitter.finatra.http.routing.HttpRouter
 import finatra.HaveANiceDayServerMain.sharedInstance
 import finatra.config.ConfigModule
-import finatra.controllers.RootController
+import finatra.controllers.{ManualTestingController, RootController}
 import finatra.swagger.HaveANiceDaySwaggerModule
 import io.swagger.models.Swagger
 import org.quartz.CronScheduleBuilder._
@@ -19,9 +19,6 @@ import org.quartz.TriggerBuilder._
 import org.quartz.impl.StdSchedulerFactory
 import quartz.smiles.{ExtractSmilesJob, GenerateSmilesJob}
 import slick.SlickModule
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 object HaveANiceDayServerMain extends HaveANiceDayServer {
 
@@ -44,6 +41,7 @@ class HaveANiceDayServer extends HttpServer {
       .filter[CommonFilters]
       .add[DocsController]
       .add[RootController]
+      .add[ManualTestingController]
 
   protected override def afterPostWarmup(): Unit = {
     super.afterPostWarmup()

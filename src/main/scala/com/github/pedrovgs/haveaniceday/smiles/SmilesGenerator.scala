@@ -1,6 +1,5 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 import com.github.pedrovgs.haveaniceday.notifications.client.NotificationsClient
@@ -15,13 +14,6 @@ import org.joda.time.DateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object SmilesGenerator {
-  private def tooEarlySmilesExtraction(dateTime: DateTime): Future[SmilesExtractionResult] = {
-    val error = Left(TryToExtractSmilesTooEarly(dateTime))
-    Future.successful(error)
-  }
-}
-
 class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
                                 twitterClient: TwitterClient,
                                 smilesExtractorRepository: SmilesExtractionsRepository,
@@ -30,16 +22,10 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
                                 clock: Clock)
     extends Logging {
 
-  import SmilesGenerator._
-
   def extractSmiles(): Future[SmilesExtractionResult] =
     for {
       lastExtractionDate <- smilesExtractorRepository.getLastSmilesExtraction
-      result <- if (shouldExtractSmiles(lastExtractionDate)) {
-        extractSmilesFromTwitterSince(lastExtractionDate)
-      } else {
-        tooEarlySmilesExtraction(clock.now)
-      }
+      result             <- extractSmilesFromTwitterSince(lastExtractionDate)
     } yield result
 
   def generateSmiles(): Future[SmilesGenerationResult] = {
@@ -85,21 +71,6 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
     val message  = smile.description.getOrElse(title)
     val photoUrl = smile.photo
     Notification(title, message, photoUrl)
-  }
-
-  private def shouldExtractSmiles(lastExtractionDate: Option[DateTime]): Boolean = {
-    val numberOfTriesPerDay           = config.numberOfExtractionsPerDay
-    val minimumDifferenceInHours: Int = 24 / numberOfTriesPerDay
-    val now                           = clock.now
-
-    def hasElapsedTheMinimumAmountOfTimeSinceTheLastExtraction(lastExtractionDate: DateTime) = {
-      TimeUnit.MILLISECONDS.toHours(now.getMillis - lastExtractionDate.getMillis) >= minimumDifferenceInHours
-    }
-
-    lastExtractionDate match {
-      case Some(date) => hasElapsedTheMinimumAmountOfTimeSinceTheLastExtraction(date)
-      case _          => true
-    }
   }
 
   private def extractSmilesFromTwitterSince(date: Option[DateTime]): Future[SmilesExtractionResult] = {

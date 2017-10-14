@@ -19,11 +19,6 @@ object model {
     override def toString: String = message
   }
 
-  case class TryToExtractSmilesTooEarly(date: DateTime) extends SmilesExtractionError {
-    override val message: String =
-      s"Try to extract smiles too soon. Extraction date $date. Review your cron jobs configuration."
-  }
-
   case object NoExtractedSmilesFound extends SmilesGenerationError {
     override val message: String =
       s"Try to extract generate smiles but there are no smiles generated previously."

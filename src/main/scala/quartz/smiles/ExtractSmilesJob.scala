@@ -14,7 +14,7 @@ class ExtractSmilesJob extends Job with Logging {
     val injector        = HaveANiceDayServerMain.sharedInstance.injector
     val smilesGenerator = injector.instance[SmilesGenerator]
     smilesGenerator.extractSmiles().onComplete {
-      case Success(Right(smiles))         => info(s"${smiles.length} smiles extracted properly 😃")
+      case Success(Right(smiles))         => info(s"${smiles.length} smiles extracted properly")
       case Success(Left(extractionError)) => error(s"Error extracting smiles: ${extractionError.message}")
       case Failure(e)                     => error(s"Unhandled exception found during the smiles extraction: ${e.getMessage}")
     }
