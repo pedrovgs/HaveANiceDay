@@ -11,8 +11,9 @@ class SmilesGeneratorLoaderConfigSpec extends FlatSpec with Matchers {
     val smilesGeneratorConfig = SmilesGeneratorConfigLoader.loadSmilesGeneratorConfig(config).get
 
     smilesGeneratorConfig.twitterAccounts shouldBe List("818887507169247232")
-    smilesGeneratorConfig.numberOfExtractionsPerDay shouldBe 1
-    smilesGeneratorConfig.generation24Hour shouldBe 10
+    smilesGeneratorConfig.scheduleTasks shouldBe true
+    smilesGeneratorConfig.extractionSchedule shouldBe "0 0 8 ? * *"
+    smilesGeneratorConfig.generationSchedule shouldBe "0 0 9 ? * *"
   }
 
   it should "return none if the configuration does not exist" in {

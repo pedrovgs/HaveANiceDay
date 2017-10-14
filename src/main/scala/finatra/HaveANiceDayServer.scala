@@ -14,7 +14,6 @@ import io.swagger.models.Swagger
 import org.quartz.CronScheduleBuilder._
 import org.quartz.JobBuilder._
 import org.quartz.Scheduler
-import org.quartz.SimpleScheduleBuilder._
 import org.quartz.TriggerBuilder._
 import org.quartz.impl.StdSchedulerFactory
 import quartz.smiles.{ExtractSmilesJob, GenerateSmilesJob}
@@ -52,31 +51,29 @@ class HaveANiceDayServer extends HttpServer {
   private def configureScheduledTasks(): Unit = {
     val scheduler = StdSchedulerFactory.getDefaultScheduler
     val config    = injector.instance[SmilesGeneratorConfig]
-    configureExtractSmilesJob(scheduler, config)
-    configureGenerateSmilesJob(scheduler, config)
-    scheduler.start()
+    if (config.scheduleTasks) {
+      configureExtractSmilesJob(scheduler, config)
+      configureGenerateSmilesJob(scheduler, config)
+      scheduler.start()
+    }
   }
 
   private def configureExtractSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
     val extractSmilesJob = newJob(classOf[ExtractSmilesJob]).build()
-    val intervalInHours  = 24 / config.numberOfExtractionsPerDay
+    val schedule         = config.extractionSchedule
     val trigger = newTrigger()
-      .withIdentity("SmilesExtractor")
-      .startNow()
-      .withSchedule(
-        simpleSchedule()
-          .withIntervalInHours(intervalInHours)
-          .repeatForever())
+      .withIdentity("SmilesExtractorJob")
+      .withSchedule(cronSchedule(schedule))
       .build()
     scheduler.scheduleJob(extractSmilesJob, trigger)
   }
 
   private def configureGenerateSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
     val generateSmilesJob = newJob(classOf[GenerateSmilesJob]).build()
-    val hour              = config.generation24Hour
+    val schedule          = config.generationSchedule
     val trigger = newTrigger()
-      .withIdentity("SmilesGenerator")
-      .withSchedule(cronSchedule(s"0 0 $hour ? * *"))
+      .withIdentity("SmilesGeneratorJob")
+      .withSchedule(cronSchedule(schedule))
       .build()
     scheduler.scheduleJob(generateSmilesJob, trigger)
   }
