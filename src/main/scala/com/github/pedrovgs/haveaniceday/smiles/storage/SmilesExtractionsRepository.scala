@@ -22,7 +22,7 @@ class SmilesExtractionsRepository @Inject()(database: Database) {
     }
   }
 
-  def updateLastExtractionStorage(date: DateTime, smilesExtractedCount: Int): Future[DateTime] = {
+  def saveLastExtractionStorage(date: DateTime, smilesExtractedCount: Int): Future[DateTime] = {
     val row = SmilesExtractionsRow(0, date, smilesExtractedCount)
     val insertQuery = SmilesExtractionsTable returning SmilesExtractionsTable
       .map(_.id) into ((row, id) => row.copy(id = id))

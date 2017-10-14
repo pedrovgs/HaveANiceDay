@@ -15,7 +15,7 @@ trait Tables {
 
   /** DDL for all tables. Call .create to execute. */
   lazy val schema
-    : profile.SchemaDescription = DevelopersTable.schema ++ SmilesExtractionsTable.schema ++ SmilesTable.schema
+    : profile.SchemaDescription = DevelopersTable.schema ++ SmilesExtractionsTable.schema ++ SmilesGenerationTable.schema ++ SmilesTable.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -96,6 +96,57 @@ trait Tables {
 
   /** Collection-like TableQuery object for table SmilesExtractionsTable */
   lazy val SmilesExtractionsTable = new TableQuery(tag => new SmilesExtractionsTable(tag))
+
+  /** Entity class storing rows of table SmilesGenerationTable
+    *  @param id Database column id SqlType(BIGINT), AutoInc, PrimaryKey
+    *  @param generationDate Database column generation_date SqlType(TIMESTAMP)
+    *  @param smileId Database column smile_id SqlType(BIGINT), Default(None)
+    *  @param error Database column error SqlType(VARCHAR), Length(255,true), Default(None) */
+  case class SmilesGenerationRow(id: Long,
+                                 generationDate: java.sql.Timestamp,
+                                 smileId: Option[Long] = None,
+                                 error: Option[String] = None)
+
+  /** GetResult implicit for fetching SmilesGenerationRow objects using plain SQL queries */
+  implicit def GetResultSmilesGenerationRow(implicit e0: GR[Long],
+                                            e1: GR[java.sql.Timestamp],
+                                            e2: GR[Option[Long]],
+                                            e3: GR[Option[String]]): GR[SmilesGenerationRow] = GR { prs =>
+    import prs._
+    SmilesGenerationRow.tupled((<<[Long], <<[java.sql.Timestamp], <<?[Long], <<?[String]))
+  }
+
+  /** Table description of table smiles_generation. Objects of this class serve as prototypes for rows in queries. */
+  class SmilesGenerationTable(_tableTag: Tag) extends Table[SmilesGenerationRow](_tableTag, "smiles_generation") {
+    def * = (id, generationDate, smileId, error) <> (SmilesGenerationRow.tupled, SmilesGenerationRow.unapply)
+
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? =
+      (Rep.Some(id), Rep.Some(generationDate), smileId, error).shaped.<>({ r =>
+        import r._; _1.map(_ => SmilesGenerationRow.tupled((_1.get, _2.get, _3, _4)))
+      }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(BIGINT), AutoInc, PrimaryKey */
+    val id: Rep[Long] = column[Long]("id", O.AutoInc, O.PrimaryKey)
+
+    /** Database column generation_date SqlType(TIMESTAMP) */
+    val generationDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("generation_date")
+
+    /** Database column smile_id SqlType(BIGINT), Default(None) */
+    val smileId: Rep[Option[Long]] = column[Option[Long]]("smile_id", O.Default(None))
+
+    /** Database column error SqlType(VARCHAR), Length(255,true), Default(None) */
+    val error: Rep[Option[String]] = column[Option[String]]("error", O.Length(255, varying = true), O.Default(None))
+
+    /** Foreign key referencing SmilesTable (database name smiles_generation_ibfk_1) */
+    lazy val smilesTableFk = foreignKey("smiles_generation_ibfk_1", smileId, SmilesTable)(
+      r => Rep.Some(r.id),
+      onUpdate = ForeignKeyAction.NoAction,
+      onDelete = ForeignKeyAction.NoAction)
+  }
+
+  /** Collection-like TableQuery object for table SmilesGenerationTable */
+  lazy val SmilesGenerationTable = new TableQuery(tag => new SmilesGenerationTable(tag))
 
   /** Entity class storing rows of table SmilesTable
     *  @param id Database column id SqlType(BIGINT), AutoInc, PrimaryKey

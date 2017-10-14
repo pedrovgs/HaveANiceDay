@@ -29,10 +29,14 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
     } yield result
 
   def generateSmiles(): Future[SmilesGenerationResult] = {
-    smilesRepository.getNextMostRatedNotSentSmile().flatMap {
-      case Some(smile) => sendSmileAndMarkItAsSent(smile)
-      case None        => Future.successful(Left(NoExtractedSmilesFound))
-    }
+    for {
+      result <- smilesRepository.getNextMostRatedNotSentSmile().flatMap {
+        case Some(smile) => sendSmileAndMarkItAsSent(smile)
+        case None        => Future.successful(Left(NoExtractedSmilesFound))
+      }
+      _ <- saveSmileGenerationResult(result)
+    } yield result
+
   }
 
   private def sendSmileAndMarkItAsSent(smile: Smile): Future[SmilesGenerationResult] = {
@@ -80,12 +84,16 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
       case Right(smiles) =>
         for {
           savedSmiles <- smilesRepository.saveSmiles(smiles)
-          _           <- smilesExtractorRepository.updateLastExtractionStorage(clock.now, savedSmiles.length)
+          _           <- smilesExtractorRepository.saveLastExtractionStorage(clock.now, savedSmiles.length)
         } yield Right(savedSmiles)
       case Left(extractionError) =>
         error(s"Error extracting smiles from twitter: $extractionError")
         Future.successful(Left(extractionError))
     }
+  }
+
+  private def saveSmileGenerationResult(result: SmilesGenerationResult): Future[SmilesGenerationResult] = {
+    ???
   }
 
 }
