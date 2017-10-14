@@ -33,7 +33,7 @@ class SmilesRepository @Inject()(database: Database) {
   }
 
   def getLastSmileSent(): Future[Option[Smile]] = {
-    val query = SmilesTable.filter(row => row.sent).sortBy(_.sentDate.desc).take(1).result.headOption
+    val query = SmilesTable.filter(row => row.sent).sortBy(_.smileNumber.desc).take(1).result.headOption
     database.db.run(query).map {
       case Some(row) => Some(row)
       case _         => None

@@ -14,7 +14,8 @@ import scala.concurrent.Future
 
 object TwitterClient {
   private val hashtagRegex = "#\\w\\w+"
-  private val urlRegex     = "/^(https?:\\/\\/)?([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$/"
+  private val urlRegex =
+    "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)"
 }
 class TwitterClient @Inject()() extends Logging {
   import TwitterClient._
@@ -45,7 +46,7 @@ class TwitterClient @Inject()() extends Logging {
       val url           = s"https://twitter.com/${tweet.user.get.screen_name}/status/${tweet.id}"
       val photo         = tweet.extended_entities.flatMap(_.media.headOption.map(_.media_url_https))
       val numberOfLikes = tweet.favorite_count + tweet.retweet_count
-      val description   = tweet.text.replaceAll(hashtagRegex, "").replace(urlRegex, "")
+      val description   = tweet.text.replaceAll(hashtagRegex, "").replaceAll(urlRegex, "")
       Smile(tweet.id,
             tweet.created_at,
             photo,

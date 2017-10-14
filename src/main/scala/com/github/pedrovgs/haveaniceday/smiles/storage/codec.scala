@@ -7,16 +7,18 @@ import slick.Tables.SmilesRow
 object codec {
 
   implicit def asRow(smile: Smile): SmilesRow =
-    SmilesRow(0,
-              smile.creationDate,
-              smile.photo,
-              smile.description,
-              smile.source.toString,
-              smile.sourceUrl,
-              smile.numberOfLikes,
-              smile.sent,
-              smile.sentDate,
-              smile.number)
+    SmilesRow(
+      smile.id,
+      smile.creationDate,
+      smile.photo,
+      smile.description,
+      smile.source.toString,
+      smile.sourceUrl,
+      smile.numberOfLikes,
+      smile.sent,
+      smile.sentDate,
+      smile.number
+    )
 
   implicit def asRow(smiles: Seq[Smile]): Seq[SmilesRow] = smiles.map(asRow)
 
