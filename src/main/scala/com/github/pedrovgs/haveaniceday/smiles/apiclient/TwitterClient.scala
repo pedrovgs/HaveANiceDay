@@ -4,7 +4,6 @@ import javax.inject.Inject
 
 import com.danielasfregola.twitter4s.TwitterRestClient
 import com.danielasfregola.twitter4s.entities.{RatedData, Tweet}
-import com.github.pedrovgs.haveaniceday.extensions.date._
 import com.github.pedrovgs.haveaniceday.smiles.model.{Smile, SmilesExtractionResult, Source, UnknownError}
 import com.twitter.inject.Logging
 import org.joda.time.DateTime
