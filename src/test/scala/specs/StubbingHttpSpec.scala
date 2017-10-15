@@ -11,13 +11,14 @@ object StubbingHttpSpec {
   val baseUrl: String = "http://" + host + ":" + port
 }
 
-class StubbingHttpSpec extends FlatSpec with BeforeAndAfter {
+abstract class StubbingHttpSpec extends FlatSpec with BeforeAndAfter {
 
   import StubbingHttpSpec._
 
-  val wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
+  private var wireMockServer: WireMockServer = _
 
   before {
+    wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(port))
     wireMockServer.start()
     WireMock.configureFor(host, port)
   }

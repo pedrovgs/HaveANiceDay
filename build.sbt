@@ -2,7 +2,7 @@ name := "HaveANiceDay"
 version := Versions.project
 scalaVersion := Versions.scala
 
-mainClass in (Compile,run) := Some("finatra.HaveANiceDayServerMain")
+mainClass in(Compile, run) := Some("finatra.HaveANiceDayServerMain")
 
 enablePlugins(ScalafmtPlugin)
 CommandAliases.addCommandAliases()
@@ -19,6 +19,15 @@ libraryDependencies += "org.scalaj" %% "scalaj-http" % Versions.scalajHttp
 libraryDependencies += "io.circe" %% "circe-core" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-generic" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-parser" % Versions.circe
+libraryDependencies ++= Seq(
+  "com.typesafe.slick" %% "slick" % Versions.slick,
+  "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick
+)
+libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % Versions.slick
+libraryDependencies += "com.danielasfregola" %% "twitter4s" % Versions.twitter4s
+libraryDependencies += "org.quartz-scheduler" % "quartz" % Versions.quartz
+libraryDependencies += "org.quartz-scheduler" % "quartz-jobs" % Versions.quartz
+libraryDependencies += "com.h2database" % "h2" % Versions.h2database % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback % Test
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra % Test
@@ -37,6 +46,35 @@ libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Tes
 libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
 libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
 
-flywayUrl := "jdbc:mysql://localhost/haveaniceday"
-flywayUser := "haveaniceday"
-flywayPassword := "haveaniceday"
+parallelExecution in Test := false
+parallelExecution in IntegrationTest := false
+testForkedParallel in Test := false
+testForkedParallel in IntegrationTest := false
+concurrentRestrictions in Global += Tags.limit(Tags.Test, 1)
+
+val dbUrl = "jdbc:mysql://localhost/haveaniceday?characterEncoding=UTF-8&nullNamePatternMatchesAll=true"
+val dbUser = "haveaniceday"
+val dbPass = "haveaniceday"
+
+flywayUrl := dbUrl
+flywayUser := dbUser
+flywayPassword := dbPass
+
+import slick.codegen.SourceCodeGenerator
+import slick.{model => m}
+
+slickCodegenSettings
+slickCodegenDatabaseUrl := dbUrl
+slickCodegenDatabaseUser := dbUser
+slickCodegenDatabasePassword := dbPass
+slickCodegenDriver := slick.driver.MySQLDriver
+slickCodegenJdbcDriver := "com.mysql.cj.jdbc.Driver"
+slickCodegenOutputPackage := "slick"
+slickCodegenExcludedTables := Seq("schema_version")
+slickCodegenOutputDir := file("./src/main/scala")
+slickCodegenCodeGenerator := { (model: m.Model) =>
+  new SourceCodeGenerator(model) {
+    override def tableName =
+      dbName => dbName.toCamelCase + "Table"
+  }
+}

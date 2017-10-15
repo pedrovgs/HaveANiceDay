@@ -3,9 +3,10 @@ package finatra.controllers
 import com.google.inject.Inject
 import com.jakehschwartz.finatra.swagger.SwaggerController
 import com.twitter.finagle.http.Request
+import com.twitter.inject.Logging
 import io.swagger.models.Swagger
 
-class RootController @Inject()(s: Swagger) extends SwaggerController {
+class RootController @Inject()(s: Swagger) extends SwaggerController with Logging {
   implicit protected val swagger: Swagger = s
 
   getWithDoc("/") { o =>

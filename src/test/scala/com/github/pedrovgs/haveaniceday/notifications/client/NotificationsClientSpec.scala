@@ -3,16 +3,14 @@ package com.github.pedrovgs.haveaniceday.notifications.client
 import com.github.pedrovgs.haveaniceday.notifications.client.model.FirebaseNotification
 import com.github.pedrovgs.haveaniceday.notifications.model.{FirebaseConfig, Notification, SendNotificationError}
 import com.github.tomakehurst.wiremock.client.WireMock._
+import extensions.futures._
 import generators.notifications._
+import io.circe.generic.auto._
+import io.circe.syntax._
 import org.scalatest.Matchers
 import org.scalatest.prop.PropertyChecks
 import specs.StubbingHttpSpec
 import specs.StubbingHttpSpec._
-import io.circe.generic.auto._
-import io.circe.syntax._
-
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 
 object NotificationsClientSpec {
   private val pushNotificationsPath = "/send"
@@ -35,7 +33,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
       post(urlEqualTo(pushNotificationsPath))
         .willReturn(aResponse().withStatus(200)))
     forAll(arbitraryNotification) { notification: Notification =>
-      val result = Await.result(client.sendNotificationToEveryUser(notification), Duration.Inf).toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -47,7 +45,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
         .withHeader("Content-type", equalTo("application/json"))
         .willReturn(aResponse().withStatus(200)))
     forAll(arbitraryNotification) { notification: Notification =>
-      val result = Await.result(client.sendNotificationToEveryUser(notification), Duration.Inf).toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -59,7 +57,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
         .withHeader("Authorization", equalTo("key=" + apiKey))
         .willReturn(aResponse().withStatus(200)))
     forAll(arbitraryNotification) { notification: Notification =>
-      val result = Await.result(client.sendNotificationToEveryUser(notification), Duration.Inf).toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -73,7 +71,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
           .withRequestBody(equalToJson(body))
           .willReturn(aResponse().withStatus(200)))
 
-      val result = Await.result(client.sendNotificationToEveryUser(notification), Duration.Inf).toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -85,7 +83,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
         post(urlEqualTo(pushNotificationsPath))
           .willReturn(aResponse().withStatus(errorStatusCode).withBody(errorBody)))
 
-      val result = Await.result(client.sendNotificationToEveryUser(notification), Duration.Inf)
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult
 
       result shouldBe Left(SendNotificationError(errorStatusCode, errorBody))
     }

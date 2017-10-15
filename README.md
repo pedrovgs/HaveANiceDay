@@ -21,6 +21,13 @@ To build and test this project you can execute ``sbt test``. You can also use sb
 ~ test-only *AnySpec // Runs specs matching with the filter passed as param.
 ```
 
+You can review the current project coverage by executing: 
+
+```
+sbt coverage test 
+sbt coverageReport
+```
+
 ## Checkstyle
 
 For the project checkstyle we are using [ScalaFMT](http://scalameta.org/scalafmt/). The code format will be evaluated after accepting any contribution to this repository using this tool. You can easily format your code changes automatically by executing ``sbt format``.
@@ -36,6 +43,10 @@ swagger-codegen generate -i target/swagger/swagger.json -l swift -o ~/Desktop/zo
 ```
 
 The complete documentation of the plugin being used to generate the Swagger specs can be found [here](https://github.com/jakehschwartz/finatra-swagger). 
+
+## Slick DB framework
+
+This project uses [Slick](http://slick.lightbend.com/) to be able to handle DB queries in a functional an easy way. We've configured [slick-codegen](http://slick.lightbend.com/doc/3.2.1/code-generation.html) to generate the FRM code automatically using the DB schema. Todo this you only need to execute ``sbt slickCodeGen`` once the local DB schema is up to date. This will generate a file named ``src/main/scala/slick/Tables.scala`` where you can find all the definition for the tables and the rows used inside.   
 
 ## Docker
 
@@ -55,14 +66,36 @@ This project handles DB migrations using [Flyway](https://flywaydb.org). All the
 flyway -user=<REDACTED> -password=<REDACTED> -url=jdbc:mysql://<REDACTED> -locations=filesystem:src/main/resources/db/migration migrate
 ```
 
+Or if you are working on your laptop you can directly use the following sbt commands:
+
+```
+//Validate database migration
+sbt flywayValidate
+//Clean database and schema
+sbt flywayClean
+//Apply migrations locally
+sbt flywayMigrate
+//Repair database if something has changed in old migrations and the changes are still valid
+sbt flywayRepair
+//Prints the details and status information about all the migrations
+sbt flywayInfo
+```
+
 ## Configuration
 
-This project can be configured using different values such as the Firebase configuration API key. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
+This project can be configured using different values such as the Firebase configuration API key or the Twitter Credentials configuration. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
 
 ```
 export FIREBASE_API_KEY="YOUR_FIREBASE_API_KEY"
+export FIREBASE_DEFAULT_TOPIC="FIREBASE_DEFAULT_TOPIC_USED_BY_THE_APP"
+export TWITTER_CONSUMER_KEY="YOUR_TWITTER_CONSUMER_KEY"
+export TWITTER_CONSUMER_SECRET="YOUR_TWITTER_CONSUMER_SECRET"
+export TWITTER_ACCESS_KEY="YOUR_TWITTER_ACCESS_KEY"
+export TWITTER_ACCESS_SECRET="YOUR_TWITTER_ACCESS_SECRET"
+export SCHEDULE_SMILE_TASKS=true
+export SMILES_EXTRACTION_SCHEDULE="0 0 8 ? * *"
+export SMILES_GENERATION_SCHEDULE="0 0 9 ? * *"
 ``` 
-
 
 ## Contributing
 

@@ -1,16 +1,29 @@
 package finatra
 
+import com.github.pedrovgs.haveaniceday.smiles.model.SmilesGeneratorConfig
 import com.jakehschwartz.finatra.swagger.DocsController
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
 import com.twitter.finatra.http.routing.HttpRouter
+import finatra.HaveANiceDayServerMain.sharedInstance
 import finatra.config.ConfigModule
-import finatra.controllers.{NotificationsController, RootController}
+import finatra.controllers.{ManualTestingController, RootController}
 import finatra.swagger.HaveANiceDaySwaggerModule
 import io.swagger.models.Swagger
+import org.quartz.CronScheduleBuilder._
+import org.quartz.JobBuilder._
+import org.quartz.Scheduler
+import org.quartz.TriggerBuilder._
+import org.quartz.impl.StdSchedulerFactory
+import quartz.smiles.{ExtractSmilesJob, GenerateSmilesJob}
+import slick.SlickModule
 
-object HaveANiceDayServerMain extends HaveANiceDayServer
+object HaveANiceDayServerMain extends HaveANiceDayServer {
+
+  var sharedInstance: HaveANiceDayServer = _
+
+}
 
 object HaveANiceDaySwagger extends Swagger
 
@@ -18,7 +31,7 @@ class HaveANiceDayServer extends HttpServer {
 
   override protected def defaultFinatraHttpPort = ":9000"
 
-  override protected def modules = Seq(HaveANiceDaySwaggerModule, ConfigModule)
+  override protected def modules = Seq(HaveANiceDaySwaggerModule, ConfigModule, SlickModule)
 
   override protected def configureHttp(router: HttpRouter): Unit =
     router
@@ -27,5 +40,41 @@ class HaveANiceDayServer extends HttpServer {
       .filter[CommonFilters]
       .add[DocsController]
       .add[RootController]
-      .add[NotificationsController]
+      .add[ManualTestingController]
+
+  protected override def afterPostWarmup(): Unit = {
+    super.afterPostWarmup()
+    sharedInstance = this
+    configureScheduledTasks()
+  }
+
+  private def configureScheduledTasks(): Unit = {
+    val scheduler = StdSchedulerFactory.getDefaultScheduler
+    val config    = injector.instance[SmilesGeneratorConfig]
+    if (config.scheduleTasks) {
+      configureExtractSmilesJob(scheduler, config)
+      configureGenerateSmilesJob(scheduler, config)
+      scheduler.start()
+    }
+  }
+
+  private def configureExtractSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
+    val extractSmilesJob = newJob(classOf[ExtractSmilesJob]).build()
+    val schedule         = config.extractionSchedule
+    val trigger = newTrigger()
+      .withIdentity("SmilesExtractorJob")
+      .withSchedule(cronSchedule(schedule))
+      .build()
+    scheduler.scheduleJob(extractSmilesJob, trigger)
+  }
+
+  private def configureGenerateSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
+    val generateSmilesJob = newJob(classOf[GenerateSmilesJob]).build()
+    val schedule          = config.generationSchedule
+    val trigger = newTrigger()
+      .withIdentity("SmilesGeneratorJob")
+      .withSchedule(cronSchedule(schedule))
+      .build()
+    scheduler.scheduleJob(generateSmilesJob, trigger)
+  }
 }
