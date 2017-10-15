@@ -22,6 +22,11 @@ object smiles {
     number        <- if (sent) Gen.some(arbitraryPositiveInt) else Gen.const(None)
   } yield Smile(id, creationDate, photo, description, source, sourceUrl, numberOfLikes, sent, sentDate, number)
 
+  val arbitraryNotSentSmile: Gen[Smile] = arbitrarySmile.map(_.copy(sent = false, sentDate = None, number = None))
+
+  val arbitrarySmilesExtractionError: Gen[SmilesExtractionError] =
+    arbitrary[String].map(UnknownError)
+
   val arbitrarySmilesGenerationError: Gen[SmilesGenerationError] =
     Gen.oneOf(NoExtractedSmilesFound, UnknownError("Ups something went wrong!"))
 

@@ -33,14 +33,14 @@ trait InMemoryDatabase {
   private def dropTables(database: Database) = {
     import database.config.profile.api._
     tables.reverse.map(_.schema.drop).foreach { query =>
-      database.db.run(query).get
+      database.db.run(query).awaitForResult
     }
   }
 
   private def createTables(database: Database) = {
     import database.config.profile.api._
     tables.map(_.schema.create).foreach { query =>
-      database.db.run(query).get
+      database.db.run(query).awaitForResult
     }
   }
 }

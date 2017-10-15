@@ -27,7 +27,7 @@ class SmilesRepositorySpec
 
   "SmilesRepository" should "save smiles into the database" in {
     forAll(Gen.nonEmptyListOf(arbitrarySmile)) { smiles =>
-      val savedSmiles = repository.saveSmiles(smiles).get
+      val savedSmiles = repository.saveSmiles(smiles).awaitForResult
 
       assertSmilesAreSavedProperly(smiles, savedSmiles)
     }

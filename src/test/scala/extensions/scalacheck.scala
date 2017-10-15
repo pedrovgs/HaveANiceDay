@@ -14,4 +14,15 @@ object scalacheck {
     }
   }
 
+  object RichGen {
+    def listOfMaxN[T](maxSize: Int, generator: Gen[T]): Gen[Seq[T]] =
+      for {
+        size <- Gen.choose(0, maxSize)
+        list <- Gen.listOfN(size, generator)
+      } yield list
+
+    def nonEmptyListOfMaxN[T](maxSize: Int, generator: Gen[T]): Gen[Seq[T]] =
+      listOfMaxN(maxSize, generator).filter(_.nonEmpty)
+  }
+
 }

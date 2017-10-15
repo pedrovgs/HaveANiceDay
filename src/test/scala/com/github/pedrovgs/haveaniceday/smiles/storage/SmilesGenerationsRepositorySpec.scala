@@ -33,7 +33,7 @@ class SmilesGenerationsRepositorySpec
 
   "SmilesGenerationsRepository" should "save an smile generation result" in {
     forAll(arbitrarySmilesGenerationResult) { result =>
-      val savedResult = saveResult(result).get
+      val savedResult = saveResult(result).awaitForResult
 
       assertGenerationResultSavedProperly(result, savedResult)
       resetDatabase()
@@ -42,9 +42,9 @@ class SmilesGenerationsRepositorySpec
 
   it should "obtain previously saved generation results" in {
     forAll(Gen.nonEmptyListOf(arbitrarySmilesGenerationResult)) { results =>
-      results.foreach(saveResult(_).get)
+      results.foreach(saveResult(_).awaitForResult)
 
-      val savedResults = repository.getGenerations().get
+      val savedResults = repository.getGenerations().awaitForResult
 
       savedResults.length shouldBe results.length
       resetDatabase()
@@ -62,7 +62,7 @@ class SmilesGenerationsRepositorySpec
   private def saveResult(result: SmilesGenerationResult): Future[SmilesGenerationResult] = {
     val resultToSave = result match {
       case Right(smile) =>
-        val savedSmile = smilesRepository.saveSmiles(Seq(smile)).get.head
+        val savedSmile = smilesRepository.saveSmiles(Seq(smile)).awaitForResult.head
         Right(savedSmile)
       case Left(error) => Left(error)
     }

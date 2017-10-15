@@ -28,14 +28,14 @@ class SmilesExtractionsRepositorySpec
   }
 
   "SmilesExtractionsRepository" should "return a None last extraction date by default" in {
-    val result = repository.getLastSmilesExtraction.get
+    val result = repository.getLastSmilesExtraction.awaitForResult
 
     result shouldBe None
   }
 
   it should "update the last extraction report" in {
     forAll(arbitraryDateTime, arbitrarySmilesExtractedCount) { (extractionDate, smilesExtractedCount) =>
-      val result = repository.saveLastExtractionStorage(extractionDate, smilesExtractedCount).get
+      val result = repository.saveLastExtractionStorage(extractionDate, smilesExtractedCount).awaitForResult
 
       result shouldBe extractionDate
     }
@@ -44,10 +44,12 @@ class SmilesExtractionsRepositorySpec
   it should "return the latest added extraction report date" in {
     forAll(Gen.nonEmptyListOf(arbitraryDateTime), arbitrarySmilesExtractedCount) { (extractionDates, count) =>
       extractionDates.foreach { date =>
-        repository.saveLastExtractionStorage(date, count).get
+        repository.saveLastExtractionStorage(date, count).awaitForResult
       }
 
-      repository.getLastSmilesExtraction.get.get shouldBe extractionDates.sorted(Ordering[DateTime].reverse).head
+      repository.getLastSmilesExtraction.awaitForResult.get shouldBe extractionDates
+        .sorted(Ordering[DateTime].reverse)
+        .head
       resetDatabase()
     }
   }

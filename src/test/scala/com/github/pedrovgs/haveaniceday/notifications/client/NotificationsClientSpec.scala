@@ -33,7 +33,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
       post(urlEqualTo(pushNotificationsPath))
         .willReturn(aResponse().withStatus(200)))
     forAll(arbitraryNotification) { notification: Notification =>
-      val result = client.sendNotificationToEveryUser(notification).get.toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -45,7 +45,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
         .withHeader("Content-type", equalTo("application/json"))
         .willReturn(aResponse().withStatus(200)))
     forAll(arbitraryNotification) { notification: Notification =>
-      val result = client.sendNotificationToEveryUser(notification).get.toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -57,7 +57,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
         .withHeader("Authorization", equalTo("key=" + apiKey))
         .willReturn(aResponse().withStatus(200)))
     forAll(arbitraryNotification) { notification: Notification =>
-      val result = client.sendNotificationToEveryUser(notification).get.toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -71,7 +71,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
           .withRequestBody(equalToJson(body))
           .willReturn(aResponse().withStatus(200)))
 
-      val result = client.sendNotificationToEveryUser(notification).get.toOption.get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
 
       result shouldBe notification
     }
@@ -83,7 +83,7 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
         post(urlEqualTo(pushNotificationsPath))
           .willReturn(aResponse().withStatus(errorStatusCode).withBody(errorBody)))
 
-      val result = client.sendNotificationToEveryUser(notification).get
+      val result = client.sendNotificationToEveryUser(notification).awaitForResult
 
       result shouldBe Left(SendNotificationError(errorStatusCode, errorBody))
     }

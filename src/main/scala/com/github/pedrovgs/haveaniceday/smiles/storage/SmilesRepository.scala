@@ -25,7 +25,8 @@ class SmilesRepository @Inject()(database: Database) {
   }
 
   def getNextMostRatedNotSentSmile(): Future[Option[Smile]] = {
-    val query = SmilesTable.filterNot(_.sent).sortBy(_.numberOfLikes.desc).take(1).result.headOption
+    val query =
+      SmilesTable.filterNot(_.sent).sortBy(row => (row.numberOfLikes.desc, row.id.desc)).take(1).result.headOption
     database.db.run(query).map {
       case Some(row) => Some(row)
       case _         => None
