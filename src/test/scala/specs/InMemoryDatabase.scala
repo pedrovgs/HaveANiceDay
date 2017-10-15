@@ -1,15 +1,15 @@
 package specs
 
+import extensions.futures._
 import slick.basic.DatabaseConfig
 import slick.jdbc._
 import slick.{Database, Tables}
 
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 import scala.util.Try
 
 object InMemoryDatabase {
-  val tables = Seq(Tables.DevelopersTable, Tables.SmilesExtractionsTable, Tables.SmilesTable)
+  val tables =
+    Seq(Tables.DevelopersTable, Tables.SmilesTable, Tables.SmilesExtractionsTable, Tables.SmilesGenerationTable)
 }
 
 trait InMemoryDatabase {
@@ -19,26 +19,28 @@ trait InMemoryDatabase {
   lazy val database: Database = {
     val config: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]("inMemorySlick")
     val db: JdbcBackend#DatabaseDef         = config.db
-    Database(config, db)
+    val inMemoryDatabase                    = Database(config, db)
+    Try(dropTables(inMemoryDatabase))
+    createTables(inMemoryDatabase)
+    inMemoryDatabase
   }
 
-  def resetDatabase(): Database = {
+  def resetDatabase() = {
     dropTables(database)
     createTables(database)
-    database
   }
 
   private def dropTables(database: Database) = {
     import database.config.profile.api._
-    tables.map(_.schema.drop).foreach { query =>
-      Try(Await.result(database.db.run(query), Duration.Inf))
+    tables.reverse.map(_.schema.drop).foreach { query =>
+      database.db.run(query).get
     }
   }
 
   private def createTables(database: Database) = {
     import database.config.profile.api._
     tables.map(_.schema.create).foreach { query =>
-      Try(Await.result(database.db.run(query), Duration.Inf))
+      database.db.run(query).get
     }
   }
 }

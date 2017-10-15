@@ -3,7 +3,8 @@ package com.github.pedrovgs.haveaniceday.smiles.storage
 import javax.inject.Inject
 
 import com.github.pedrovgs.haveaniceday.extensions.sqldate._
-import com.github.pedrovgs.haveaniceday.smiles.model.SmilesGenerationResult
+import com.github.pedrovgs.haveaniceday.smiles.model.{SmilesGeneration, SmilesGenerationResult}
+import com.github.pedrovgs.haveaniceday.smiles.storage.codec._
 import com.github.pedrovgs.haveaniceday.utils.Clock
 import slick.Database
 import slick.Tables.{SmilesGenerationRow, SmilesGenerationTable}
@@ -24,4 +25,8 @@ class SmilesGenerationsRepository @Inject()(database: Database, clock: Clock) {
       .map(_.id) into ((row, id) => row.copy(id = id))
     database.db.run(insertQuery += row).map(_ => result)
   }
+
+  def getGenerations(): Future[Seq[SmilesGeneration]] =
+    database.db.run(SmilesGenerationTable.result).map(asSmilesGeneration)
+
 }

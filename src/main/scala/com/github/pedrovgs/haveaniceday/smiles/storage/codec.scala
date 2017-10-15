@@ -1,8 +1,8 @@
 package com.github.pedrovgs.haveaniceday.smiles.storage
 
 import com.github.pedrovgs.haveaniceday.extensions.sqldate._
-import com.github.pedrovgs.haveaniceday.smiles.model.{Smile, Source}
-import slick.Tables.SmilesRow
+import com.github.pedrovgs.haveaniceday.smiles.model.{Smile, SmilesGeneration, SmilesGenerationResult, Source}
+import slick.Tables.{SmilesGenerationRow, SmilesRow}
 
 object codec {
 
@@ -37,4 +37,10 @@ object codec {
     )
 
   implicit def asDomain(rows: Seq[SmilesRow]): Seq[Smile] = rows.map(asDomain)
+
+  implicit def asSmilesGeneration(row: SmilesGenerationRow): SmilesGeneration =
+    SmilesGeneration(row.id, row.generationDate, row.smileId, row.error)
+
+  implicit def asSmilesGeneration(rows: Seq[SmilesGenerationRow]): Seq[SmilesGeneration] =
+    rows.map(asSmilesGeneration)
 }

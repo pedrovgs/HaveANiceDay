@@ -46,4 +46,9 @@ object model {
                    sentDate: Option[DateTime],
                    number: Option[Int])
 
+  case class SmilesGeneration(id: Long,
+                              generationDate: DateTime,
+                              smileId: Option[Long] = None,
+                              error: Option[String] = None)
+
 }

@@ -1,6 +1,6 @@
 package generators
 
-import com.github.pedrovgs.haveaniceday.smiles.model.{Smile, Source}
+import com.github.pedrovgs.haveaniceday.smiles.model._
 import generators.common._
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen
@@ -22,4 +22,15 @@ object smiles {
     number        <- if (sent) Gen.some(arbitraryPositiveInt) else Gen.const(None)
   } yield Smile(id, creationDate, photo, description, source, sourceUrl, numberOfLikes, sent, sentDate, number)
 
+  val arbitrarySmilesGenerationError: Gen[SmilesGenerationError] =
+    Gen.oneOf(NoExtractedSmilesFound, UnknownError("Ups something went wrong!"))
+
+  val arbitrarySmilesGenerationResult: Gen[SmilesGenerationResult] = for {
+    smile <- Gen.option(arbitrarySmile)
+    error <- arbitrarySmilesGenerationError
+  } yield
+    smile match {
+      case Some(smileSent) => Right(smileSent)
+      case _               => Left(error)
+    }
 }
