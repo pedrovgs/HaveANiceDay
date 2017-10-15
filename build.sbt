@@ -1,6 +1,7 @@
 name := "HaveANiceDay"
 version := Versions.project
 scalaVersion := Versions.scala
+assemblyJarName in assembly := "haveANiceDay.jar"
 
 mainClass in(Compile, run) := Some("finatra.HaveANiceDayServerMain")
 
@@ -9,12 +10,9 @@ CommandAliases.addCommandAliases()
 
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback
-libraryDependencies += "com.jakehschwartz" %% "finatra-swagger" % Versions.finatraSwagger
 libraryDependencies += "com.h2database" % "h2" % Versions.flyway
 libraryDependencies += "mysql" % "mysql-connector-java" % Versions.mysqlConnector
-libraryDependencies += "com.47deg" %% "classy-core" % Versions.caseClassy
-libraryDependencies += "com.47deg" %% "classy-config-typesafe" % Versions.caseClassy
-libraryDependencies += "com.47deg" %% "classy-generic" % Versions.caseClassy
+libraryDependencies += "com.typesafe" % "config" % Versions.config
 libraryDependencies += "org.scalaj" %% "scalaj-http" % Versions.scalajHttp
 libraryDependencies += "io.circe" %% "circe-core" % Versions.circe
 libraryDependencies += "io.circe" %% "circe-generic" % Versions.circe
@@ -77,4 +75,12 @@ slickCodegenCodeGenerator := { (model: m.Model) =>
     override def tableName =
       dbName => dbName.toCamelCase + "Table"
   }
+}
+
+test in assembly := {}
+
+assemblyMergeStrategy in assembly := {
+  case "BUILD" => MergeStrategy.discard
+  case "META-INF/io.netty.versions.properties" => MergeStrategy.last
+  case other => MergeStrategy.defaultMergeStrategy(other)
 }

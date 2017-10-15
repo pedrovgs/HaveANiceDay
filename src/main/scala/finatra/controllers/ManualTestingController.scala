@@ -5,13 +5,11 @@ import com.google.inject.Inject
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import com.twitter.inject.Logging
-import io.swagger.models.Swagger
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-class ManualTestingController @Inject()(s: Swagger, smilesGenerator: SmilesGenerator) extends Controller with Logging {
-  implicit protected val swagger: Swagger = s
+class ManualTestingController @Inject()(smilesGenerator: SmilesGenerator) extends Controller with Logging {
 
   get("/extractSmiles") { request: Request =>
     if (isLocalhostRequest(request)) {

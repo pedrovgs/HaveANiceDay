@@ -86,6 +86,9 @@ sbt flywayInfo
 This project can be configured using different values such as the Firebase configuration API key or the Twitter Credentials configuration. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
 
 ```
+export MYSQL_JDBC_URL="YOUR_MYSQL_SERVER_URL"
+export MYSQL_USER="YOUR_MYSQL_USER"
+export MYSQL_PASSWORD="YOUR_MYSQL_PASSWORD"
 export FIREBASE_API_KEY="YOUR_FIREBASE_API_KEY"
 export FIREBASE_DEFAULT_TOPIC="FIREBASE_DEFAULT_TOPIC_USED_BY_THE_APP"
 export TWITTER_CONSUMER_KEY="YOUR_TWITTER_CONSUMER_KEY"
