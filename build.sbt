@@ -1,7 +1,6 @@
 name := "HaveANiceDay"
 version := Versions.project
 scalaVersion := Versions.scala
-assemblyJarName in assembly := "haveANiceDay.jar"
 
 mainClass in(Compile, run) := Some("finatra.HaveANiceDayServerMain")
 
