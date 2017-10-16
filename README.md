@@ -105,27 +105,29 @@ export SMILES_GENERATION_SCHEDULE="0 0 9 ? * *"
 This project is ready to automatically create a docker image you can easily deploy on any server. You just need to execute:
 
 ```
-sbt docker
+sbt assembly
+docker build -t haveaniceday .
 ```
 
 If you need to run this image from command line you can execute:
 
 ```
-docker run default/haveaniceday -d
+docker run haveaniceday -d
 ```
 
 If you need to generate a tar file with the docker image you can execute:
 
 ```
-docker save default/haveaniceday > haveaniceday.tar
+docker save IMAGE_TAG > haveaniceday.tar
 ```
 
 Or upload the image to docker hub executing the following commands:
 
 ```
 docker images
+docker tag DOCKER_IMAGE_TAG YOUR_DOCKER_USERNAME/haveaniceday:latest
 docker login --username=YOUR_DOCKER_USERNAME
-docker push YOUR_DOCKER_USERNAME/default/haveaniceday
+docker push YOUR_DOCKER_USERNAME/haveaniceday
 ```
 
 ## Contributing

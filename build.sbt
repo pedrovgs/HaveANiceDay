@@ -4,7 +4,6 @@ scalaVersion := Versions.scala
 
 mainClass in(Compile, run) := Some("finatra.HaveANiceDayServerMain")
 
-enablePlugins(DockerPlugin)
 enablePlugins(ScalafmtPlugin)
 CommandAliases.addCommandAliases()
 
@@ -83,15 +82,4 @@ assemblyMergeStrategy in assembly := {
   case "BUILD" => MergeStrategy.discard
   case "META-INF/io.netty.versions.properties" => MergeStrategy.last
   case other => MergeStrategy.defaultMergeStrategy(other)
-}
-
-dockerfile in docker := {
-  val artifact: File = assembly.value
-  val artifactTargetPath = s"/app/${artifact.name}"
-
-  new Dockerfile {
-    from("java")
-    add(artifact, artifactTargetPath)
-    entryPoint("java", "-jar", artifactTargetPath)
-  }
 }
