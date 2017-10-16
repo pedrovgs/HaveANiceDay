@@ -1,5 +1,7 @@
 package slick
 
+import javax.inject.Singleton
+
 import com.google.inject.Provides
 import com.twitter.inject.TwitterModule
 import slick.basic.DatabaseConfig
@@ -7,6 +9,7 @@ import slick.jdbc.{JdbcBackend, JdbcProfile}
 
 object SlickModule extends TwitterModule {
 
+  @Singleton
   @Provides
   def database: Database = {
     val config: DatabaseConfig[JdbcProfile] = DatabaseConfig.forConfig[JdbcProfile]("slick")

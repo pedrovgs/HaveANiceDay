@@ -86,6 +86,9 @@ sbt flywayInfo
 This project can be configured using different values such as the Firebase configuration API key or the Twitter Credentials configuration. In order to override the default configuration you can replace the values found inside the ``*.conf`` files or use environment variables. If you define the following environment variables the project will be configured properly:
 
 ```
+export MYSQL_JDBC_URL="YOUR_MYSQL_SERVER_URL"
+export MYSQL_USER="YOUR_MYSQL_USER"
+export MYSQL_PASSWORD="YOUR_MYSQL_PASSWORD"
 export FIREBASE_API_KEY="YOUR_FIREBASE_API_KEY"
 export FIREBASE_DEFAULT_TOPIC="FIREBASE_DEFAULT_TOPIC_USED_BY_THE_APP"
 export TWITTER_CONSUMER_KEY="YOUR_TWITTER_CONSUMER_KEY"
@@ -96,6 +99,36 @@ export SCHEDULE_SMILE_TASKS=true
 export SMILES_EXTRACTION_SCHEDULE="0 0 8 ? * *"
 export SMILES_GENERATION_SCHEDULE="0 0 9 ? * *"
 ``` 
+
+## Docker image
+
+This project is ready to automatically create a docker image you can easily deploy on any server. You just need to execute:
+
+```
+sbt assembly
+docker build -t haveaniceday .
+```
+
+If you need to run this image from command line you can execute:
+
+```
+docker run haveaniceday -d
+```
+
+If you need to generate a tar file with the docker image you can execute:
+
+```
+docker save IMAGE_TAG > haveaniceday.tar
+```
+
+Or upload the image to docker hub executing the following commands:
+
+```
+docker images
+docker tag DOCKER_IMAGE_TAG YOUR_DOCKER_USERNAME/haveaniceday:latest
+docker login --username=YOUR_DOCKER_USERNAME
+docker push YOUR_DOCKER_USERNAME/haveaniceday
+```
 
 ## Contributing
 

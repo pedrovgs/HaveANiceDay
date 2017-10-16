@@ -1,19 +1,13 @@
 package finatra.controllers
 
 import com.google.inject.Inject
-import com.jakehschwartz.finatra.swagger.SwaggerController
 import com.twitter.finagle.http.Request
+import com.twitter.finatra.http.Controller
 import com.twitter.inject.Logging
-import io.swagger.models.Swagger
 
-class RootController @Inject()(s: Swagger) extends SwaggerController with Logging {
-  implicit protected val swagger: Swagger = s
+class RootController @Inject() extends Controller with Logging {
 
-  getWithDoc("/") { o =>
-    o.tag("Root")
-      .summary("Root endpoint created to simply return 200 status code if the service is running.")
-      .responseWith(200)
-  } { _: Request =>
+  get("/") { _: Request =>
     response.ok
   }
 }

@@ -40,7 +40,7 @@ class TwitterClient @Inject()() extends Logging {
 
   private def toSmiles(extractionDate: DateTime, timeline: RatedData[Seq[Tweet]]): Seq[Smile] = {
     val validTweets = timeline.data
-      .filter(_.created_at.compareTo(extractionDate.toDate) < 0)
+      .filter(_.created_at.compareTo(extractionDate.toDate) > 0)
       .filter(_.extended_entities.map(_.media).nonEmpty)
     validTweets.map { tweet =>
       val url           = s"https://twitter.com/${tweet.user.get.screen_name}/status/${tweet.id}"
