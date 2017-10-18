@@ -1,6 +1,5 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
-import com.github.pedrovgs.haveaniceday.notifications.model.SendNotificationError
 import org.joda.time.DateTime
 
 object model {

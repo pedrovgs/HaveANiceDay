@@ -6,12 +6,11 @@ import com.github.pedrovgs.haveaniceday.smiles.model.ErrorSendingNotification
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.smiles._
 import extensions.futures._
-import generators.notifications._
 import io.circe.generic.auto._
 import io.circe.syntax._
 import org.scalatest.Matchers
 import org.scalatest.prop.PropertyChecks
-import specs.StubbingHttpSpec
+import specs.{StubbingHttpSpec, TestResources}
 import specs.StubbingHttpSpec._
 
 object NotificationsClientSpec {
@@ -23,7 +22,7 @@ object NotificationsClientSpec {
   private val errorStatusCode       = 400
 }
 
-class NotificationsClientSpec extends StubbingHttpSpec with Matchers with PropertyChecks {
+class NotificationsClientSpec extends StubbingHttpSpec with Matchers with PropertyChecks with TestResources {
 
   import NotificationsClientSpec._
 
@@ -33,7 +32,10 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
   "NotificationsClient" should "return the notification sent if the push notification was sent properly" in {
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
-        .willReturn(aResponse().withStatus(200)))
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
     forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
       val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
@@ -45,7 +47,9 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
         .withHeader("Content-type", equalTo("application/json"))
-        .willReturn(aResponse().withStatus(200)))
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
     forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
       val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
@@ -57,7 +61,9 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
         .withHeader("Authorization", equalTo("key=" + apiKey))
-        .willReturn(aResponse().withStatus(200)))
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
     forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
       val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
@@ -75,7 +81,9 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
       stubFor(
         post(urlEqualTo(pushNotificationsPath))
           .withRequestBody(equalToJson(body))
-          .willReturn(aResponse().withStatus(200)))
+          .willReturn(aResponse()
+            .withStatus(200)
+            .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
 
       val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
@@ -87,11 +95,28 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
     forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
       stubFor(
         post(urlEqualTo(pushNotificationsPath))
-          .willReturn(aResponse().withStatus(errorStatusCode).withBody(errorBody)))
+          .willReturn(
+            aResponse()
+              .withStatus(errorStatusCode)
+              .withBody(errorBody)))
 
       val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult
 
       result shouldBe Left(ErrorSendingNotification(smile, SendNotificationError(errorStatusCode, errorBody).message))
+    }
+  }
+
+  it should "return an error even if the response is 200 but the body contains an error" in {
+    stubFor(
+      post(urlEqualTo(pushNotificationsPath))
+        .withHeader("Authorization", equalTo("key=" + apiKey))
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(contentFromResource("/notifications/notificationSentErrorResponse.json"))))
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult
+
+      result shouldBe Left(ErrorSendingNotification(smile, SendNotificationError(200, "invalid receiver").message))
     }
   }
 

@@ -6,8 +6,8 @@ import com.github.pedrovgs.haveaniceday.smiles.model.{ErrorSendingNotification, 
 import com.google.inject.Inject
 import com.twitter.inject.Logging
 import io.circe.generic.auto._
+import io.circe.parser.decode
 import io.circe.syntax._
-
 import scala.concurrent.Future
 import scalaj.http.{Http, HttpRequest, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -26,8 +26,15 @@ class NotificationsClient @Inject()(config: FirebaseConfig) extends Logging {
     Future {
       val response = sendPostRequestToFirebase(notification)
       info(s"Push notification sent with response: $response")
-      if (response.isSuccess) { //TODO This is just the happy case
-        Right(notification)
+      if (response.isSuccess) {
+        val firebaseResponse = decode[FirebaseResponse](response.body)
+        firebaseResponse match {
+          case Right(FirebaseResponse(Some(_), None)) => Right(notification)
+          case Right(FirebaseResponse(None, Some(error))) =>
+            Left(SendNotificationError(response.code, error))
+          case _ =>
+            Left(SendNotificationError(response.code, response.body))
+        }
       } else {
         Left(SendNotificationError(response.code, response.body))
       }
