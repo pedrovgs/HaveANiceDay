@@ -1,5 +1,6 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
+import com.github.pedrovgs.haveaniceday.notifications.model.SendNotificationError
 import org.joda.time.DateTime
 
 object model {
@@ -21,7 +22,12 @@ object model {
 
   case object NoExtractedSmilesFound extends SmilesGenerationError {
     override val message: String =
-      s"Try to extract generate smiles but there are no smiles generated previously."
+      s"Try to extract generate smiles but there are no smiles generated previously"
+  }
+
+  case class ErrorSendingNotification(smile: Smile, error: String) extends SmilesGenerationError {
+    override val message: String =
+      s"Try to send smile with id ${smile.id} but there was an error sending the push notification. Error: $error"
   }
 
   case class UnknownError(message: String) extends SmilesExtractionError with SmilesGenerationError

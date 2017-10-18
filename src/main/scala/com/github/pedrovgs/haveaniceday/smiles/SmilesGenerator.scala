@@ -3,7 +3,6 @@ package com.github.pedrovgs.haveaniceday.smiles
 import javax.inject.Inject
 
 import com.github.pedrovgs.haveaniceday.notifications.client.NotificationsClient
-import com.github.pedrovgs.haveaniceday.notifications.model.Notification
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
 import com.github.pedrovgs.haveaniceday.smiles.model._
 import com.github.pedrovgs.haveaniceday.smiles.storage.{
@@ -61,25 +60,16 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
   private def sendSmile(smile: Smile): Future[SmilesGenerationResult] = {
     for {
       lastSmileSent <- smilesRepository.getLastSmileSent()
-      smileNumber: Int = lastSmileSent.flatMap(_.number.map(_ + 1)).getOrElse(1)
-      notification     = generateNotificationFromSmile(smile, smileNumber)
-      sendNotificationResult <- notificationsClient.sendNotificationToEveryUser(notification)
+      smileNumber = lastSmileSent.flatMap(_.number.map(_ + 1)).getOrElse(1)
+      sendNotificationResult <- notificationsClient.sendSmileToEveryUser(smile, smileNumber)
     } yield
       sendNotificationResult match {
         case Right(_) =>
           val smileMarkedAsSent = smile.copy(sent = true, sentDate = Some(clock.now), number = Some(smileNumber))
           Right(smileMarkedAsSent)
         case Left(error) =>
-          Left(UnknownError(
-            s"Something went wrong while sending the notification. Error code: ${error.code} Error message: ${error.message}"))
+          Left(UnknownError(s"Something went wrong while sending the notification. Error message: ${error.message}"))
       }
-  }
-
-  private def generateNotificationFromSmile(smile: Smile, smileNumber: Int): Notification = {
-    val title    = s"Have a nice day #$smileNumber 😃"
-    val message  = smile.description.getOrElse(title)
-    val photoUrl = smile.photo
-    Notification(title, message, photoUrl)
   }
 
   private def extractSmilesFromTwitterSince(date: Option[DateTime]): Future[SmilesExtractionResult] = {

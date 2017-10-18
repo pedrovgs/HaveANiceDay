@@ -7,6 +7,8 @@ import org.scalacheck.Gen
 
 object smiles {
 
+  val arbitrarySmileNumber: Gen[Int] = Gen.choose(0, Int.MaxValue)
+
   val arbitrarySmilesExtractedCount: Gen[Int] = Gen.choose(0, Int.MaxValue)
 
   val arbitrarySmile: Gen[Smile] = for {
