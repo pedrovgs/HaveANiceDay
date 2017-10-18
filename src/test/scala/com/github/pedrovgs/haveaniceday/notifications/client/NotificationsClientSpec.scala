@@ -2,14 +2,15 @@ package com.github.pedrovgs.haveaniceday.notifications.client
 
 import com.github.pedrovgs.haveaniceday.notifications.client.model.FirebaseNotification
 import com.github.pedrovgs.haveaniceday.notifications.model.{FirebaseConfig, Notification, SendNotificationError}
+import com.github.pedrovgs.haveaniceday.smiles.model.ErrorSendingNotification
 import com.github.tomakehurst.wiremock.client.WireMock._
+import generators.smiles._
 import extensions.futures._
-import generators.notifications._
 import io.circe.generic.auto._
 import io.circe.syntax._
 import org.scalatest.Matchers
 import org.scalatest.prop.PropertyChecks
-import specs.StubbingHttpSpec
+import specs.{StubbingHttpSpec, TestResources}
 import specs.StubbingHttpSpec._
 
 object NotificationsClientSpec {
@@ -21,7 +22,7 @@ object NotificationsClientSpec {
   private val errorStatusCode       = 400
 }
 
-class NotificationsClientSpec extends StubbingHttpSpec with Matchers with PropertyChecks {
+class NotificationsClientSpec extends StubbingHttpSpec with Matchers with PropertyChecks with TestResources {
 
   import NotificationsClientSpec._
 
@@ -31,11 +32,14 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
   "NotificationsClient" should "return the notification sent if the push notification was sent properly" in {
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
-        .willReturn(aResponse().withStatus(200)))
-    forAll(arbitraryNotification) { notification: Notification =>
-      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
+        .willReturn(
+          aResponse()
+            .withStatus(200)
+            .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
-      result shouldBe notification
+      result shouldBe smile
     }
   }
 
@@ -43,11 +47,13 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
         .withHeader("Content-type", equalTo("application/json"))
-        .willReturn(aResponse().withStatus(200)))
-    forAll(arbitraryNotification) { notification: Notification =>
-      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
-      result shouldBe notification
+      result shouldBe smile
     }
   }
 
@@ -55,37 +61,63 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
         .withHeader("Authorization", equalTo("key=" + apiKey))
-        .willReturn(aResponse().withStatus(200)))
-    forAll(arbitraryNotification) { notification: Notification =>
-      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
-      result shouldBe notification
+      result shouldBe smile
     }
   }
 
   it should "send the notification using a body composed with the notification info" in {
-    forAll(arbitraryNotification) { notification: Notification =>
-      val body = FirebaseNotification.fromNotification(topic, notification).asJson.toString
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val title        = s"Have a nice day #$smileNumber 😃"
+      val message      = smile.description.getOrElse(title)
+      val photoUrl     = smile.photo
+      val notification = Notification(title, message, photoUrl)
+      val body         = FirebaseNotification.fromNotification(topic, notification).asJson.toString
       stubFor(
         post(urlEqualTo(pushNotificationsPath))
           .withRequestBody(equalToJson(body))
-          .willReturn(aResponse().withStatus(200)))
+          .willReturn(aResponse()
+            .withStatus(200)
+            .withBody(contentFromResource("/notifications/notificationSentResponse.json"))))
 
-      val result = client.sendNotificationToEveryUser(notification).awaitForResult.toOption.get
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult.toOption.get
 
-      result shouldBe notification
+      result shouldBe smile
     }
   }
 
   it should "return the status code error and the body if something goes wrong" in {
-    forAll(arbitraryNotification) { notification: Notification =>
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
       stubFor(
         post(urlEqualTo(pushNotificationsPath))
-          .willReturn(aResponse().withStatus(errorStatusCode).withBody(errorBody)))
+          .willReturn(
+            aResponse()
+              .withStatus(errorStatusCode)
+              .withBody(errorBody)))
 
-      val result = client.sendNotificationToEveryUser(notification).awaitForResult
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult
 
-      result shouldBe Left(SendNotificationError(errorStatusCode, errorBody))
+      result shouldBe Left(ErrorSendingNotification(smile, SendNotificationError(errorStatusCode, errorBody).message))
+    }
+  }
+
+  it should "return an error even if the response is 200 but the body contains an error" in {
+    val responseBody = contentFromResource("/notifications/notificationSentErrorResponse.json")
+    stubFor(
+      post(urlEqualTo(pushNotificationsPath))
+        .withHeader("Authorization", equalTo("key=" + apiKey))
+        .willReturn(aResponse()
+          .withStatus(200)
+          .withBody(responseBody)))
+    forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult
+
+      result shouldBe Left(ErrorSendingNotification(smile, SendNotificationError(200, responseBody).message))
     }
   }
 

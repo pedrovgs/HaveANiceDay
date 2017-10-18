@@ -1,0 +1,11 @@
+{
+  "canonical_ids": 0,
+  "failure": 1,
+  "multicast_id": 8812881680777089010,
+  "results": [
+    {
+      "error": "InvalidRegistration"
+    }
+  ],
+  "success": 0
+}

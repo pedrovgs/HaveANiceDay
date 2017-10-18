@@ -4,12 +4,7 @@ import com.github.pedrovgs.haveaniceday.notifications.client.NotificationsClient
 import com.github.pedrovgs.haveaniceday.notifications.model.{Notification, SendNotificationError}
 import com.github.pedrovgs.haveaniceday.smiles.apiclient.TwitterClient
 import com.github.pedrovgs.haveaniceday.smiles.config.SmilesGeneratorConfigLoader
-import com.github.pedrovgs.haveaniceday.smiles.model.{
-  NoExtractedSmilesFound,
-  Smile,
-  SmilesExtractionError,
-  UnknownError
-}
+import com.github.pedrovgs.haveaniceday.smiles.model._
 import com.github.pedrovgs.haveaniceday.smiles.storage.{
   SmilesExtractionsRepository,
   SmilesGenerationsRepository,
@@ -123,9 +118,9 @@ class SmilesGeneratorSpec
   }
 
   it should "does not send any notification if there are no smiles to generate" in {
-    val result = smilesGenerator.generateSmiles().awaitForResult
+    smilesGenerator.generateSmiles().awaitForResult
 
-    verify(notificationsClient, never()).sendNotificationToEveryUser(any[Notification])
+    verify(notificationsClient, never()).sendSmileToEveryUser(any[Smile], any[Int])
     resetDatabase()
   }
 
@@ -195,17 +190,17 @@ class SmilesGeneratorSpec
     val message          = expectedSmile.description.getOrElse(title)
     val photoUrl         = expectedSmile.photo
     val notificationSent = Notification(title, message, photoUrl)
-    verify(notificationsClient, numberOfNotificationsSent).sendNotificationToEveryUser(notificationSent)
+    verify(notificationsClient, numberOfNotificationsSent).sendSmileToEveryUser(expectedSmile, smileNumber)
   }
 
   private def givenTheNotificationsClientSendsTheNotification() = {
-    val result = Future.successful(Right(mock[Notification]))
-    when(notificationsClient.sendNotificationToEveryUser(any[Notification])).thenReturn(result)
+    val result = Future.successful(Right(mock[Smile]))
+    when(notificationsClient.sendSmileToEveryUser(any[Smile], any[Int])).thenReturn(result)
   }
 
-  private def givenThereIsAnErrorWhileGeneratingTheNotification(): SendNotificationError = {
-    val error = SendNotificationError(400, "Invalid topic")
-    when(notificationsClient.sendNotificationToEveryUser(any[Notification])).thenReturn(Future.successful(Left(error)))
+  private def givenThereIsAnErrorWhileGeneratingTheNotification(): ErrorSendingNotification = {
+    val error = ErrorSendingNotification(mock[Smile], SendNotificationError(400, "Invalid topic").message)
+    when(notificationsClient.sendSmileToEveryUser(any[Smile], any[Int])).thenReturn(Future.successful(Left(error)))
     error
   }
 
