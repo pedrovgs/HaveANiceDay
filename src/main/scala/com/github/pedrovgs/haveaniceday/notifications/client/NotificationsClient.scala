@@ -26,17 +26,18 @@ class NotificationsClient @Inject()(config: FirebaseConfig) extends Logging {
     Future {
       val response = sendPostRequestToFirebase(notification)
       info(s"Push notification sent with response: $response")
+      val responseBody = response.body
       if (response.isSuccess) {
-        val firebaseResponse = decode[FirebaseResponse](response.body)
+        val firebaseResponse = decode[FirebaseResponse](responseBody)
         firebaseResponse match {
           case Right(FirebaseResponse(Some(_), None)) => Right(notification)
-          case Right(FirebaseResponse(None, Some(error))) =>
-            Left(SendNotificationError(response.code, error))
+          case Right(FirebaseResponse(None, Some(_))) =>
+            Left(SendNotificationError(response.code, responseBody))
           case _ =>
-            Left(SendNotificationError(response.code, response.body))
+            Left(SendNotificationError(response.code, responseBody))
         }
       } else {
-        Left(SendNotificationError(response.code, response.body))
+        Left(SendNotificationError(response.code, responseBody))
       }
     }
   }
@@ -46,6 +47,7 @@ class NotificationsClient @Inject()(config: FirebaseConfig) extends Logging {
     val request: HttpRequest = Http(config.firebaseUrl)
       .header("Authorization", "key=" + config.firebaseApiKey)
       .header("Content-Type", "application/json")
+    info(s"Generating push notification data with content: $body")
     request.postData(body).asString
   }
 

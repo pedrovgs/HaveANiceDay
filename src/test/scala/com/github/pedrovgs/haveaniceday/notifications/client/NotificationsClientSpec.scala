@@ -107,16 +107,17 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
   }
 
   it should "return an error even if the response is 200 but the body contains an error" in {
+    val responseBody = contentFromResource("/notifications/notificationSentErrorResponse.json")
     stubFor(
       post(urlEqualTo(pushNotificationsPath))
         .withHeader("Authorization", equalTo("key=" + apiKey))
         .willReturn(aResponse()
           .withStatus(200)
-          .withBody(contentFromResource("/notifications/notificationSentErrorResponse.json"))))
+          .withBody(responseBody)))
     forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
       val result = client.sendSmileToEveryUser(smile, smileNumber).awaitForResult
 
-      result shouldBe Left(ErrorSendingNotification(smile, SendNotificationError(200, "invalid receiver").message))
+      result shouldBe Left(ErrorSendingNotification(smile, SendNotificationError(200, responseBody).message))
     }
   }
 

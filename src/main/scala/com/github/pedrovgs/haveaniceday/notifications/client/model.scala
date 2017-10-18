@@ -14,6 +14,6 @@ object model {
   }
   case class FirebaseNotification(to: String, data: FirebaseNotificationData)
 
-  case class FirebaseResponse(message_id: Option[Long], error: Option[String])
+  case class FirebaseResponse(message_id: Option[Long], failure: Option[Long])
 
 }
