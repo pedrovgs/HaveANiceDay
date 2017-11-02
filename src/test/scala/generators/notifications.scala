@@ -9,10 +9,11 @@ import org.scalacheck.Gen
 object notifications {
 
   val arbitraryNotification: Gen[Notification] = for {
+    id       <- Gen.posNum[Long]
     title    <- arbitraryStrBetweenSize(1, 60)
     message  <- arbitraryStrMaxSize(280)
     photoUrl <- arbitrary[Option[String]]
-  } yield Notification(title, message, photoUrl)
+  } yield Notification(id, title, message, photoUrl)
 
   val arbitraryFirebaseNotification: Gen[FirebaseNotification] = for {
     to           <- arbitrary[String]

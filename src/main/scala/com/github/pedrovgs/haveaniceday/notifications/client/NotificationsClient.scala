@@ -59,7 +59,7 @@ class NotificationsClient @Inject()(config: FirebaseConfig) extends Logging {
     val title    = s"Have a nice day #$smileNumber 😃"
     val message  = smile.description.getOrElse(title)
     val photoUrl = smile.photo
-    Notification(title, message, photoUrl)
+    Notification(smile.id, title, message, photoUrl)
   }
 
 }

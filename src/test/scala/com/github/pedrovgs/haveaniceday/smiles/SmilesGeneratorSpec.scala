@@ -186,10 +186,11 @@ class SmilesGeneratorSpec
   }
 
   private def verifySmileSent(expectedSmile: Smile, smileNumber: Int, numberOfNotificationsSent: VerificationMode) = {
+    val id               = expectedSmile.id
     val title            = s"Have a nice day #$smileNumber 😃"
     val message          = expectedSmile.description.getOrElse(title)
     val photoUrl         = expectedSmile.photo
-    val notificationSent = Notification(title, message, photoUrl)
+    val notificationSent = Notification(id, title, message, photoUrl)
     verify(notificationsClient, numberOfNotificationsSent).sendSmileToEveryUser(expectedSmile, smileNumber)
   }
 
