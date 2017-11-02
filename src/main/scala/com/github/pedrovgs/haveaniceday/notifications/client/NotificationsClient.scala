@@ -52,7 +52,7 @@ class NotificationsClient @Inject()(config: FirebaseConfig) extends Logging {
   }
 
   private def generateRequestBody(to: String, notification: Notification): String = {
-    FirebaseNotification.fromNotification(to, notification).asJson.toString
+    FirebaseNotification.fromNotification(to, notification).asJson.noSpaces
   }
 
   private def generateNotificationFromSmile(smile: Smile, smileNumber: Int): Notification = {
