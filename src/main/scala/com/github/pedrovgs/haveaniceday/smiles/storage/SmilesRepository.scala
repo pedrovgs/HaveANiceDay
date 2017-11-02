@@ -2,8 +2,9 @@ package com.github.pedrovgs.haveaniceday.smiles.storage
 
 import javax.inject.Inject
 
-import com.github.pedrovgs.haveaniceday.smiles.model.{Smile, SmilesGenerationResult}
+import com.github.pedrovgs.haveaniceday.smiles.model.{GetSmileResult, GetSmilesResult, Smile, SmilesGenerationResult}
 import com.github.pedrovgs.haveaniceday.smiles.storage.codec._
+import com.github.pedrovgs.haveaniceday.utils.model
 import slick.Database
 import slick.Tables.{SmilesRow, SmilesTable}
 
@@ -39,6 +40,18 @@ class SmilesRepository @Inject()(database: Database) {
       case Some(row) => Some(row)
       case _         => None
     }
+  }
+
+  def get(query: model.Query): Future[GetSmilesResult] = {
+    ???
+  }
+
+  def get(id: Long): Future[GetSmileResult] = {
+    ???
+  }
+
+  def getRandomSmile(): Future[GetSmileResult] = {
+    ???
   }
 
   def update(smile: Smile): Future[Smile] = {
