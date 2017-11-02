@@ -46,8 +46,8 @@ class TwitterClient @Inject()() extends Logging {
       val url           = s"https://twitter.com/${tweet.user.get.screen_name}/status/${tweet.id}"
       val photo         = tweet.extended_entities.flatMap(_.media.headOption.map(_.media_url_https))
       val numberOfLikes = tweet.favorite_count + tweet.retweet_count
-      val description   = tweet.text.replaceAll(hashtagRegex, "").replaceAll(urlRegex, "")
-      Smile(tweet.id,
+      val description   = tweet.text.replaceAll(hashtagRegex, "").replaceAll(urlRegex, "").replaceAll("\n", "").trim()
+      Smile(0,
             tweet.created_at,
             photo,
             Some(description),

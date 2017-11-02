@@ -1,5 +1,6 @@
 package finatra
 
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.github.pedrovgs.haveaniceday.smiles.model.SmilesGeneratorConfig
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
