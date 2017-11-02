@@ -14,6 +14,8 @@ class SmilesGeneratorLoaderConfigSpec extends FlatSpec with Matchers {
     smilesGeneratorConfig.scheduleTasks shouldBe true
     smilesGeneratorConfig.extractionSchedule shouldBe "0 0 8 ? * *"
     smilesGeneratorConfig.generationSchedule shouldBe "0 0 9 ? * *"
+    smilesGeneratorConfig.allowManualSmilesExtraction shouldBe true
+    smilesGeneratorConfig.allowManualSmilesGeneration shouldBe true
   }
 
   it should "return none if the configuration does not exist" in {

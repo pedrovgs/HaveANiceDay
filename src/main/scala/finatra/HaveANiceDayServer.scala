@@ -7,7 +7,7 @@ import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceI
 import com.twitter.finatra.http.routing.HttpRouter
 import finatra.HaveANiceDayServerMain.sharedInstance
 import finatra.config.ConfigModule
-import finatra.controllers.{ManualTestingController, RootController}
+import finatra.controllers.{ManualTestingController, RootController, SmilesController}
 import org.quartz.CronScheduleBuilder._
 import org.quartz.JobBuilder._
 import org.quartz.Scheduler
@@ -34,6 +34,7 @@ class HaveANiceDayServer extends HttpServer {
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
       .add[RootController]
+      .add[SmilesController]
       .add[ManualTestingController]
 
   protected override def afterPostWarmup(): Unit = {

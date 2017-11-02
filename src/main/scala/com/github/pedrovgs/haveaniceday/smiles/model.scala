@@ -34,7 +34,9 @@ object model {
   case class SmilesGeneratorConfig(twitterAccounts: List[String],
                                    scheduleTasks: Boolean,
                                    extractionSchedule: String,
-                                   generationSchedule: String)
+                                   generationSchedule: String,
+                                   allowManualSmilesExtraction: Boolean,
+                                   allowManualSmilesGeneration: Boolean)
 
   object Source extends Enumeration {
     val Twitter = Value
