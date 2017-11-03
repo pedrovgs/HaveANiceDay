@@ -54,7 +54,7 @@ class GetSmilesSpec
 
   it should "return every smile in the repository if every is smile is sent" in {
     val numberOfSmiles = 10
-    val query  = Query(1, numberOfSmiles)
+    val query          = Query(1, numberOfSmiles)
     forAll(Gen.listOfN(numberOfSmiles, arbitrarySentSmile)) { smiles =>
       val savedSmiles = saveSmiles(smiles)
 
@@ -81,7 +81,7 @@ class GetSmilesSpec
 
   it should "return an empty result if there are no more smiles in the next page" in {
     val numberOfSmiles = 10
-    val query  = Query(2, numberOfSmiles)
+    val query          = Query(2, numberOfSmiles)
     forAll(Gen.listOfN(numberOfSmiles, arbitrarySentSmile)) { smiles =>
       saveSmiles(smiles)
 
