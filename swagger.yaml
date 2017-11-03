@@ -4,9 +4,6 @@ info:
     API documentation for the smiles generator called [HaveANiceDay](https://github.com/pedrovgs/haveaniceday)
   version: 1.1.0
   title: Have a nice day API
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
 paths:
   /smiles:
     get:
