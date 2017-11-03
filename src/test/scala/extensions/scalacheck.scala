@@ -5,9 +5,9 @@ import org.scalacheck.Gen
 object scalacheck {
 
   implicit class RichGen[T](gen: Gen[T]) {
-    def one(): T = {
+    val one: T = {
       var sample = gen.sample
-      while (!sample.isDefined) {
+      while (sample.isEmpty) {
         sample = gen.sample
       }
       sample.get
