@@ -27,7 +27,8 @@ object smiles {
 
   val arbitraryNotSentSmile: Gen[Smile] = arbitrarySmile.map(_.copy(sent = false, sentDate = None, number = None))
 
-  val arbitrarySentSmile: Gen[Smile] = arbitrarySmile.map(_.copy(sent = true, sentDate = Gen.some(arbitraryDateTime).one, number = Gen.some(Gen.posNum[Int]).one))
+  val arbitrarySentSmile: Gen[Smile] = arbitrarySmile.map(
+    _.copy(sent = true, sentDate = Gen.some(arbitraryDateTime).one, number = Gen.some(Gen.posNum[Int]).one))
 
   val arbitrarySmilesExtractionError: Gen[SmilesExtractionError] =
     arbitrary[String].map(UnknownError)

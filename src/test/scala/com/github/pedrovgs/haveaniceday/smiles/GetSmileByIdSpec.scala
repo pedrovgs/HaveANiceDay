@@ -11,15 +11,16 @@ import org.scalatest.prop.PropertyChecks
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 import specs.InMemoryDatabase
 
-class GetSmileByIdSpec extends FlatSpec
-  with Matchers
-  with InMemoryDatabase
-  with BeforeAndAfter
-  with PropertyChecks
-  with MockitoSugar {
+class GetSmileByIdSpec
+    extends FlatSpec
+    with Matchers
+    with InMemoryDatabase
+    with BeforeAndAfter
+    with PropertyChecks
+    with MockitoSugar {
 
   private val repository = new SmilesRepository(database)
-  private val getSmile = new GetSmileById(repository)
+  private val getSmile   = new GetSmileById(repository)
 
   before {
     resetDatabase()
@@ -58,6 +59,5 @@ class GetSmileByIdSpec extends FlatSpec
   }
 
   private def saveSmile(smile: Smile): Smile = repository.saveSmiles(Seq(smile)).awaitForResult.head
-
 
 }
