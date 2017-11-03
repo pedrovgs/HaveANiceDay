@@ -3,7 +3,7 @@ package finatra.api.smiles
 import com.github.pedrovgs.haveaniceday.smiles.model.Smile
 import com.github.pedrovgs.haveaniceday.smiles.utils.SmileTitleGenerator
 import com.github.pedrovgs.haveaniceday.utils.model.QueryResult
-import finatra.api.model.PaginatedResponse
+import finatra.api.model.PageApiModel
 
 object model {
 
@@ -15,7 +15,7 @@ object model {
                   smile.description,
                   smile.photo)
 
-  implicit def asApiModel(result: QueryResult[Smile]): PaginatedResponse[SmileApiModel] =
-    PaginatedResponse(result.data.map(asApiModel), result.totalCount, result.query.page, result.query.pageSize)
+  implicit def asApiModel(result: QueryResult[Smile]): PageApiModel[SmileApiModel] =
+    PageApiModel(result.data.map(asApiModel), result.totalCount, result.query.page, result.query.pageSize)
 
 }

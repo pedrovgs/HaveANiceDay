@@ -6,7 +6,7 @@ import com.google.inject.Inject
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import com.twitter.inject.Logging
-import finatra.api.model.PaginatedResponse
+import finatra.api.model.PageApiModel
 import finatra.api.smiles.model._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,7 +19,7 @@ class SmilesController @Inject()(getSmiles: GetSmiles, getSmileById: GetSmileByI
     withQuery(request, response) { query =>
       getSmiles(query).map {
         case Right(smiles) =>
-          val responsePage: PaginatedResponse[SmileApiModel] = smiles
+          val responsePage: PageApiModel[SmileApiModel] = smiles
           responsePage
         case Left(error) =>
           response.badRequest(error.message)

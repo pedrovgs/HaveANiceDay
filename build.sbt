@@ -42,6 +42,8 @@ libraryDependencies += "org.mockito" % "mockito-core" % Versions.mockito % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
 libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
 libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % Versions.jackson % Test
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % Versions.jackson % Test
 
 parallelExecution in Test := false
 parallelExecution in IntegrationTest := false

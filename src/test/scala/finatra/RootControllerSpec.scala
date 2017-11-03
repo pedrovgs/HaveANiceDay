@@ -5,7 +5,7 @@ import specs.InMemoryDatabaseFeatureTest
 
 class RootControllerSpec extends InMemoryDatabaseFeatureTest {
 
-  test("Should return OK at the root path") {
+  test("should return OK at the root path") {
     server.httpGet(path = "/", andExpect = Status.Ok)
   }
 }
