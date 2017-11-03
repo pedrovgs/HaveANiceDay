@@ -10,8 +10,9 @@ import scala.concurrent.Future
 object QueryRequestExtractor {
 
   def withQuery(request: Request, responseBuilder: ResponseBuilder)(f: (Query => Future[Any])): Future[Any] = {
-    val page     = Try(request.params("page").toLong).toOption.getOrElse(1L)
-    val pageSize = Try(request.params("pageSize").toInt).toOption.getOrElse(25)
+    val defaultQuery = Query()
+    val page         = Try(request.params("page").toLong).toOption.getOrElse(defaultQuery.page)
+    val pageSize     = Try(request.params("pageSize").toInt).toOption.getOrElse(defaultQuery.pageSize)
     f(Query(page, pageSize))
   }
 
