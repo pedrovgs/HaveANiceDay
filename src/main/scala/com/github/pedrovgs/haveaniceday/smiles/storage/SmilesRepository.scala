@@ -46,7 +46,7 @@ class SmilesRepository @Inject()(database: Database) {
   def get(query: model.Query): Future[QueryResult[Smile]] = {
     val offset               = (query.page - 1) * query.pageSize
     val pageSize             = query.pageSize
-    val dbQuery              = SmilesTable.filter(row => row.sent).sortBy(_.smileNumber.desc).drop(offset).take(pageSize).result
+    val dbQuery              = SmilesTable.filter(row => row.sent).sortBy(_.sentDate.desc).drop(offset).take(pageSize).result
     val countQuery           = SmilesTable.filter(row => row.sent).result
     val eventuallySmilesSent = database.db.run(countQuery)
     val eventuallySmilesPage = database.db.run(dbQuery)

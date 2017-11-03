@@ -1,5 +1,6 @@
 package generators
 
+import com.github.pedrovgs.haveaniceday.utils.model.Query
 import finatra.api.model.PageApiModel
 import org.joda.time.DateTime
 import org.scalacheck.Gen
@@ -27,6 +28,12 @@ object common {
     } yield schema + "://" + host + "." + domain + "/" + resource
     arbitraryLongUrl.filter(_.length <= 2083)
   }
+
+  val arbitraryQuery: Gen[Query] =
+    for {
+      page     <- Gen.posNum[Long]
+      pageSize <- Gen.posNum[Int]
+    } yield Query(page, pageSize)
 
   def arbitraryStrMaxSize(maxSize: Int) =
     for {

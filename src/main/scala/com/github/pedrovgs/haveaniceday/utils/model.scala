@@ -10,7 +10,7 @@ object model {
     val message: String
   }
 
-  case class InvalidQuery(message: String)
+  case class InvalidQuery(message: String) extends HaveANiceDayError
 
   case class ItemNotFound(id: String = "") extends HaveANiceDayError {
     val message: String = s"Item with id $id not found"

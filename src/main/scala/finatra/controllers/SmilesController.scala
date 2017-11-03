@@ -1,7 +1,7 @@
 package finatra.controllers
 
 import com.github.pedrovgs.haveaniceday.smiles.{GetRandomSmile, GetSmileById, GetSmiles}
-import com.github.pedrovgs.haveaniceday.utils.QueryRequestExtractor._
+import finatra.utils.QueryRequestExtractor._
 import com.google.inject.Inject
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
