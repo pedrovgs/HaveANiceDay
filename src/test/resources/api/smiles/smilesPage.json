@@ -1,0 +1,19 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Title",
+      "message": "Message",
+      "photoUrl": "http://photos.com/random.png"
+    },
+    {
+      "id": 1,
+      "title": "Title",
+      "message": null,
+      "photoUrl": null
+    }
+  ],
+  "totalCount": 10,
+  "page": 1,
+  "pageSize": 5
+}

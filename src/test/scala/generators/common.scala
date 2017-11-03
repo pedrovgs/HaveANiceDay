@@ -1,5 +1,6 @@
 package generators
 
+import finatra.api.model.PageApiModel
 import org.joda.time.DateTime
 import org.scalacheck.Gen
 import org.scalacheck.Arbitrary._
@@ -38,4 +39,12 @@ object common {
       size  <- Gen.choose(minSize, maxSize)
       value <- Gen.listOfN(size, Gen.alphaNumChar)
     } yield value.mkString("")
+
+  def arbitraryPage[T](gen: Gen[T]): Gen[PageApiModel[T]] =
+    for {
+      pageSize   <- Gen.choose(0, 25)
+      data       <- Gen.listOfN(pageSize, gen)
+      page       <- arbitrary[Int]
+      totalCount <- Gen.choose(pageSize, Long.MaxValue)
+    } yield PageApiModel(data, totalCount, page, pageSize)
 }
