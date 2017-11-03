@@ -48,7 +48,7 @@ class HaveANiceDayServer extends HttpServer {
 
   private def configureScheduledTasks(): Unit = {
     val scheduler = StdSchedulerFactory.getDefaultScheduler
-    val config = injector.instance[SmilesGeneratorConfig]
+    val config    = injector.instance[SmilesGeneratorConfig]
     if (config.scheduleTasks) {
       configureExtractSmilesJob(scheduler, config)
       configureGenerateSmilesJob(scheduler, config)
@@ -58,7 +58,7 @@ class HaveANiceDayServer extends HttpServer {
 
   private def configureExtractSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
     val extractSmilesJob = newJob(classOf[ExtractSmilesJob]).build()
-    val schedule = config.extractionSchedule
+    val schedule         = config.extractionSchedule
     val trigger = newTrigger()
       .withIdentity("SmilesExtractorJob")
       .withSchedule(cronSchedule(schedule))
@@ -68,7 +68,7 @@ class HaveANiceDayServer extends HttpServer {
 
   private def configureGenerateSmilesJob(scheduler: Scheduler, config: SmilesGeneratorConfig) = {
     val generateSmilesJob = newJob(classOf[GenerateSmilesJob]).build()
-    val schedule = config.generationSchedule
+    val schedule          = config.generationSchedule
     val trigger = newTrigger()
       .withIdentity("SmilesGeneratorJob")
       .withSchedule(cronSchedule(schedule))

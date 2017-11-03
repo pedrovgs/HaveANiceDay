@@ -38,7 +38,7 @@ class SmilesController @Inject()(getSmiles: GetSmiles, getSmileById: GetSmileByI
     }
   }
 
-  get("/api/randomSmile") { _: Request =>
+  get("/api/smile") { _: Request =>
     getRandomSmile().map {
       case Right(smile) =>
         val smileApiModel: SmileApiModel = smile

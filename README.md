@@ -34,15 +34,11 @@ For the project checkstyle we are using [ScalaFMT](http://scalameta.org/scalafmt
 
 ## API documentation
 
-The REST API created in this project is documented using [Swagger](https://swagger.io/). Our build configuration will automatically generate a web-site with the API documentation based on the routing files if ``sbt run`` is executed. The documentation can be reviewed locally here: [http://localhost:9000/docs](http://localhost:9000/docs).
-   
-**The Swagger API description is generated into a file named ``swagger.json`` you can find in the path ``localhost:9000/swagger.json`` after running the app. This file can be used to generate client side code in many different languages automatically using [Swagger Code Gen](https://github.com/swagger-api/swagger-codegen).** You can easily install Swagger Code Gen from brew and execute the following command to generate, for example, the iOS API Client code:
+The REST API created in this project is documented using [Swagger](https://swagger.io/). In the repository root folder you can find a [swagger.yaml](./swagger.yaml) file you can open with your favorite Swagger editor and use it to review the documentation or for debugging purposes. **This file can be also used to generate client side code in many different languages automatically using [Swagger Code Gen](https://github.com/swagger-api/swagger-codegen).** You can easily install Swagger Code Gen from brew and execute the following command to generate, for example, the iOS API Client code:
    
 ```
 swagger-codegen generate -i target/swagger/swagger.json -l swift -o ~/Desktop/zolla-ios-api-client
-```
-
-The complete documentation of the plugin being used to generate the Swagger specs can be found [here](https://github.com/jakehschwartz/finatra-swagger). 
+``` 
 
 ## Slick DB framework
 

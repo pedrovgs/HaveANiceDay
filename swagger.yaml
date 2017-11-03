@@ -1,0 +1,109 @@
+swagger: '2.0'
+info:
+  description:
+    API documentation for the smiles generator called [HaveANiceDay](https://github.com/pedrovgs/haveaniceday)
+  version: 1.1.0
+  title: Have a nice day API
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /smiles:
+    get:
+      summary: Returns a page of sent smiles.
+      produces:
+      - application/json
+      parameters:
+      - name: page
+        in: query
+        description: Starting at 1. Configures the page to be fetched.
+        required: false
+        type: integer
+        default: 1
+      - name: pageSize
+        in: query
+        description: Indicates the size of the page. The page size value has to be in the range (0,100].
+        default: 25
+        required: false
+        type: integer
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/SmilesPage'
+  /smile/{id}:
+    get:
+      summary: Finds a smile by id.
+      description: Returns a smile already sent.
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Smile id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Smile'
+        400:
+          description: Invalid id supplied
+        404:
+          description: Smile not found
+  /smile:
+    get:
+      summary: Returns a random smile.
+      description: Returns a smile already sent.
+      produces:
+      - application/json
+      responses:
+        200:
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Smile'
+        404:
+          description: Smile not found
+
+definitions:
+  Smile:
+    type: object
+    required:
+      - id
+      - title
+    properties:
+      id:
+        type: integer
+        format: int64
+      title:
+        type: string
+      message:
+        type: string
+      photoUrl:
+        type: string
+  SmilesPage:
+    type: object
+    required:
+      - totalCount
+      - page
+      - pageSize
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Smile'
+      totalCount:
+        type: integer
+      page:
+        type: integer
+      pageSize:
+        type: integer
+externalDocs:
+  description: HaveANiceDay source code.
+  url: https://github.com/pedrovgs/HaveANiceDay
+host: localhost:9000
+basePath: /api
+schemes:
+ - http
