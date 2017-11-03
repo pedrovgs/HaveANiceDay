@@ -20,7 +20,7 @@ before_install:
   - mysql -e "create database IF NOT EXISTS haveaniceday;" -uroot
   - mysql -u root -e "CREATE USER 'haveaniceday'@'localhost' IDENTIFIED BY 'haveaniceday';"
   - mysql -u root -e "GRANT ALL ON haveaniceday.* TO 'haveaniceday'@'localhost';"
-  - npm install swagger-spec-validator
+  - npm i -g swagger-spec-validator
 
 
 script:
