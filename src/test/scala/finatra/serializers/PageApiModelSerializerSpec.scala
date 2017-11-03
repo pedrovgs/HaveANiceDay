@@ -8,14 +8,15 @@ import generators.common._
 import org.scalacheck.Arbitrary._
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
-import specs.TestResources
+import specs.{JsonParser, TestResources}
 
-class PageApiModelSerializerSpec extends FlatSpec with TestResources with PropertyChecks with Matchers {
+class PageApiModelSerializerSpec
+    extends FlatSpec
+    with TestResources
+    with PropertyChecks
+    with Matchers
+    with JsonParser {
 
-  private val mapper = {
-    val mapper = new ObjectMapper() with ScalaObjectMapper
-    mapper.registerModule(DefaultScalaModule)
-  }
   private val anyEmptyPage    = PageApiModel(Seq(), 0, 1, 10)
   private val anyNotEmptyPage = PageApiModel(Seq(1, 2, 3), 3, 1, 10)
 

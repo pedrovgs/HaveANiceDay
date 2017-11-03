@@ -7,7 +7,7 @@ import slick.Database
 
 abstract class InMemoryDatabaseFeatureTest extends FeatureTest with InMemoryDatabase {
 
-  override val server = new EmbeddedHttpServer(new HaveANiceDayServer)
+  override val server: EmbeddedHttpServer = new EmbeddedHttpServer(new HaveANiceDayServer)
     .bind[Database](database)
 
 }

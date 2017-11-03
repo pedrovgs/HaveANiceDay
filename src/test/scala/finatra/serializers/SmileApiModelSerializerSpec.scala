@@ -8,14 +8,14 @@ import finatra.api.smiles.model.SmileApiModel
 import generators.api.smiles._
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{FlatSpec, Matchers}
-import specs.TestResources
+import specs.{JsonParser, TestResources}
 
-class SmileApiModelSerializerSpec extends FlatSpec with TestResources with PropertyChecks with Matchers {
-
-  private val mapper = {
-    val mapper = new ObjectMapper() with ScalaObjectMapper
-    mapper.registerModule(DefaultScalaModule)
-  }
+class SmileApiModelSerializerSpec
+    extends FlatSpec
+    with TestResources
+    with PropertyChecks
+    with Matchers
+    with JsonParser {
 
   private val anyTitle           = "Title"
   private val anyId              = 1

@@ -8,9 +8,7 @@
     },
     {
       "id": 1,
-      "title": "Title",
-      "message": null,
-      "photoUrl": null
+      "title": "Title"
     }
   ],
   "totalCount": 10,

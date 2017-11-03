@@ -49,7 +49,7 @@ object common {
 
   def arbitraryPage[T](gen: Gen[T]): Gen[PageApiModel[T]] =
     for {
-      pageSize   <- Gen.choose(0, 25)
+      pageSize   <- Gen.choose(1, 25)
       data       <- Gen.listOfN(pageSize, gen)
       page       <- arbitrary[Int]
       totalCount <- Gen.choose(pageSize, Long.MaxValue)

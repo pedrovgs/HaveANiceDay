@@ -1,4 +1,4 @@
-package finatra
+package finatra.controllers
 
 import com.twitter.finagle.http.Status
 import specs.InMemoryDatabaseFeatureTest
