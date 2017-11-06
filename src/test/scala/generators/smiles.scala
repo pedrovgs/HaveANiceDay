@@ -1,5 +1,6 @@
 package generators
 
+import extensions.scalacheck._
 import com.github.pedrovgs.haveaniceday.smiles.model._
 import generators.common._
 import org.scalacheck.Arbitrary._
@@ -25,6 +26,9 @@ object smiles {
   } yield Smile(id, creationDate, photo, description, source, sourceUrl, numberOfLikes, sent, sentDate, number)
 
   val arbitraryNotSentSmile: Gen[Smile] = arbitrarySmile.map(_.copy(sent = false, sentDate = None, number = None))
+
+  val arbitrarySentSmile: Gen[Smile] = arbitrarySmile.map(
+    _.copy(sent = true, sentDate = Gen.some(arbitraryDateTime).one, number = Gen.some(Gen.posNum[Int]).one))
 
   val arbitrarySmilesExtractionError: Gen[SmilesExtractionError] =
     arbitrary[String].map(UnknownError)

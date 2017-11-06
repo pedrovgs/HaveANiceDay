@@ -8,6 +8,7 @@ enablePlugins(ScalafmtPlugin)
 CommandAliases.addCommandAliases()
 
 libraryDependencies += "com.twitter" %% "finatra-http" % Versions.finatra
+libraryDependencies += "com.twitter" %% "finatra-jackson" % Versions.finatra
 libraryDependencies += "ch.qos.logback" % "logback-classic" % Versions.logback
 libraryDependencies += "com.h2database" % "h2" % Versions.flyway
 libraryDependencies += "mysql" % "mysql-connector-java" % Versions.mysqlConnector
@@ -37,11 +38,14 @@ libraryDependencies += "com.twitter" %% "inject-server" % Versions.finatra % Tes
 libraryDependencies += "com.twitter" %% "inject-app" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "com.twitter" %% "inject-core" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "com.twitter" %% "inject-modules" % Versions.finatra % Test classifier "tests"
+libraryDependencies += "com.twitter" %% "finatra-jackson" % Versions.finatra % Test classifier "tests"
 libraryDependencies += "com.google.inject.extensions" % "guice-testlib" % Versions.guice % Test
 libraryDependencies += "org.mockito" % "mockito-core" % Versions.mockito % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % Versions.scalatest % Test
 libraryDependencies += "com.github.tomakehurst" % "wiremock" % Versions.wiremock % Test
 libraryDependencies += "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-core" % Versions.jackson % Test
+libraryDependencies += "com.fasterxml.jackson.core" % "jackson-databind" % Versions.jackson % Test
 
 parallelExecution in Test := false
 parallelExecution in IntegrationTest := false

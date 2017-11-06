@@ -4,11 +4,12 @@ import com.github.pedrovgs.haveaniceday.notifications.model.Notification
 
 object model {
 
-  case class FirebaseNotificationData(title: String, message: String, photoUrl: Option[String])
+  case class FirebaseNotificationData(id: Long, title: String, message: String, photoUrl: Option[String])
 
   object FirebaseNotification {
     def fromNotification(to: String, notification: Notification): FirebaseNotification = {
-      val data = FirebaseNotificationData(notification.title, notification.messgae, notification.photoUrl)
+      val data =
+        FirebaseNotificationData(notification.id, notification.title, notification.messgae, notification.photoUrl)
       FirebaseNotification(to, data)
     }
   }

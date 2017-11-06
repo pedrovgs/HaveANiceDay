@@ -11,13 +11,14 @@ import specs.TestResources
 import generators.notifications._
 
 object FirebaseNotificationSerializerSpec {
+  private val anyId         = 1
   private val anyToResource = "anyResource"
   private val anyTitle      = "title"
   private val anyMessage    = "message"
   val completeNotification =
-    FirebaseNotification(anyToResource, FirebaseNotificationData(anyTitle, anyMessage, Some("photo url")))
+    FirebaseNotification(anyToResource, FirebaseNotificationData(anyId, anyTitle, anyMessage, Some("photo url")))
   val incompleteNotification =
-    FirebaseNotification(anyToResource, FirebaseNotificationData(anyTitle, anyMessage, None))
+    FirebaseNotification(anyToResource, FirebaseNotificationData(anyId, anyTitle, anyMessage, None))
 }
 class FirebaseNotificationSerializerSpec extends FlatSpec with Matchers with TestResources with PropertyChecks {
   import FirebaseNotificationSerializerSpec._

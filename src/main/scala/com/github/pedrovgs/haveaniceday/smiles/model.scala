@@ -1,11 +1,14 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
+import com.github.pedrovgs.haveaniceday.utils.model.{HaveANiceDayError, QueryResult}
 import org.joda.time.DateTime
 
 object model {
 
   type SmilesExtractionResult = Either[SmilesExtractionError, Seq[Smile]]
   type SmilesGenerationResult = Either[SmilesGenerationError, Smile]
+  type GetSmilesResult        = Either[HaveANiceDayError, QueryResult[Smile]]
+  type GetSmileResult         = Either[HaveANiceDayError, Smile]
 
   sealed trait SmilesExtractionError {
     val message: String
@@ -34,7 +37,9 @@ object model {
   case class SmilesGeneratorConfig(twitterAccounts: List[String],
                                    scheduleTasks: Boolean,
                                    extractionSchedule: String,
-                                   generationSchedule: String)
+                                   generationSchedule: String,
+                                   allowManualSmilesExtraction: Boolean,
+                                   allowManualSmilesGeneration: Boolean)
 
   object Source extends Enumeration {
     val Twitter = Value

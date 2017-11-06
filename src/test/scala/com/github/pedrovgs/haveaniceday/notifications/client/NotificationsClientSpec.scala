@@ -73,10 +73,11 @@ class NotificationsClientSpec extends StubbingHttpSpec with Matchers with Proper
 
   it should "send the notification using a body composed with the notification info" in {
     forAll(arbitrarySmile, arbitrarySmileNumber) { (smile, smileNumber) =>
+      val id           = smile.id
       val title        = s"Have a nice day #$smileNumber 😃"
       val message      = smile.description.getOrElse(title)
       val photoUrl     = smile.photo
-      val notification = Notification(title, message, photoUrl)
+      val notification = Notification(id, title, message, photoUrl)
       val body         = FirebaseNotification.fromNotification(topic, notification).asJson.toString
       stubFor(
         post(urlEqualTo(pushNotificationsPath))

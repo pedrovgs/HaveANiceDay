@@ -3,11 +3,13 @@ package com.github.pedrovgs.haveaniceday.notifications.client
 import com.github.pedrovgs.haveaniceday.notifications.client.model._
 import com.github.pedrovgs.haveaniceday.notifications.model.{FirebaseConfig, Notification, SendNotificationError}
 import com.github.pedrovgs.haveaniceday.smiles.model.{ErrorSendingNotification, Smile}
+import com.github.pedrovgs.haveaniceday.smiles.utils.SmileTitleGenerator
 import com.google.inject.Inject
 import com.twitter.inject.Logging
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
+
 import scala.concurrent.Future
 import scalaj.http.{Http, HttpRequest, HttpResponse}
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -52,14 +54,14 @@ class NotificationsClient @Inject()(config: FirebaseConfig) extends Logging {
   }
 
   private def generateRequestBody(to: String, notification: Notification): String = {
-    FirebaseNotification.fromNotification(to, notification).asJson.toString
+    FirebaseNotification.fromNotification(to, notification).asJson.noSpaces
   }
 
   private def generateNotificationFromSmile(smile: Smile, smileNumber: Int): Notification = {
-    val title    = s"Have a nice day #$smileNumber 😃"
+    val title    = SmileTitleGenerator.generateSmileForTitle(smileNumber)
     val message  = smile.description.getOrElse(title)
     val photoUrl = smile.photo
-    Notification(title, message, photoUrl)
+    Notification(smile.id, title, message, photoUrl)
   }
 
 }
