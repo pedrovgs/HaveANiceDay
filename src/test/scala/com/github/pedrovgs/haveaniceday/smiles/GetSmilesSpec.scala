@@ -52,7 +52,7 @@ class GetSmilesSpec
     }
   }
 
-  it should "return every smile in the repository if every is smile is sent" in {
+  it should "return every smile in the repository if every smile is sent" in {
     val numberOfSmiles = 10
     val query          = Query(1, numberOfSmiles)
     forAll(Gen.listOfN(numberOfSmiles, arbitrarySentSmile)) { smiles =>
