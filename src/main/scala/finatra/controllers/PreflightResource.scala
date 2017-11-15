@@ -1,12 +1,11 @@
 package finatra.controllers
 
-
 import com.twitter.finagle.mux.Request
 import com.twitter.finatra.http.Controller
 
 class PreflightResource extends Controller {
 
-  options("/:*") { _ : Request =>
+  options("/:*") { _: Request =>
     response.ok
       .header("Access-Control-Allow-Origin", "*")
       .header("Access-Control-Allow-Methods", "HEAD, GET, PUT, POST, DELETE, OPTIONS")
