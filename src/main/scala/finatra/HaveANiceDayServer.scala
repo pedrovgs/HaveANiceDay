@@ -8,7 +8,7 @@ import com.twitter.finatra.http.routing.HttpRouter
 import finatra.HaveANiceDayServerMain.sharedInstance
 import finatra.api.HaveANiceDayJacksonModule
 import finatra.config.ConfigModule
-import finatra.controllers.{ManualTestingController, RootController, SmilesController}
+import finatra.controllers.{ManualTestingController, PreflightResource, RootController, SmilesController}
 import org.quartz.CronScheduleBuilder._
 import org.quartz.JobBuilder._
 import org.quartz.Scheduler
@@ -36,6 +36,7 @@ class HaveANiceDayServer extends HttpServer {
       .filter[LoggingMDCFilter[Request, Response]]
       .filter[TraceIdMDCFilter[Request, Response]]
       .filter[CommonFilters]
+      .add[PreflightResource]
       .add[RootController]
       .add[SmilesController]
       .add[ManualTestingController]
