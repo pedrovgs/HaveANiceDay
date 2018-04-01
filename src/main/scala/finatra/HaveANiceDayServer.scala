@@ -1,5 +1,7 @@
 package finatra
 
+import java.util.TimeZone
+
 import com.github.pedrovgs.haveaniceday.smiles.model.SmilesGeneratorConfig
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
@@ -21,10 +23,11 @@ import slick.SlickModule
 object HaveANiceDayServerMain extends HaveANiceDayServer {
 
   var sharedInstance: HaveANiceDayServer = _
-
+  val schedulerTimeZone                  = TimeZone.getTimeZone("Europe/Madrid")
 }
 
 class HaveANiceDayServer extends HttpServer {
+  import HaveANiceDayServerMain._
 
   override protected def defaultFinatraHttpPort = ":9000"
 
@@ -63,7 +66,7 @@ class HaveANiceDayServer extends HttpServer {
     val schedule         = config.extractionSchedule
     val trigger = newTrigger()
       .withIdentity("SmilesExtractorJob")
-      .withSchedule(cronSchedule(schedule))
+      .withSchedule(cronSchedule(schedule).inTimeZone(schedulerTimeZone))
       .build()
     scheduler.scheduleJob(extractSmilesJob, trigger)
   }
@@ -73,7 +76,7 @@ class HaveANiceDayServer extends HttpServer {
     val schedule          = config.generationSchedule
     val trigger = newTrigger()
       .withIdentity("SmilesGeneratorJob")
-      .withSchedule(cronSchedule(schedule))
+      .withSchedule(cronSchedule(schedule).inTimeZone(schedulerTimeZone))
       .build()
     scheduler.scheduleJob(generateSmilesJob, trigger)
   }
