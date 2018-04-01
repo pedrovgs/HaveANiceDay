@@ -1,5 +1,6 @@
 package com.github.pedrovgs.haveaniceday.smiles
 
+import java.util.Random
 import javax.inject.Inject
 
 import com.github.pedrovgs.haveaniceday.notifications.client.NotificationsClient
@@ -17,6 +18,9 @@ import org.joda.time.DateTime
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
+object SmilesGenerator {
+  private val random = new Random()
+}
 class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
                                 twitterClient: TwitterClient,
                                 smilesExtractorRepository: SmilesExtractionsRepository,
@@ -26,6 +30,8 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
                                 clock: Clock)
     extends Logging {
 
+  import SmilesGenerator._
+
   def extractSmiles(): Future[SmilesExtractionResult] =
     for {
       lastExtractionDate <- smilesExtractorRepository.getLastSmilesExtraction
@@ -34,7 +40,9 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
 
   def generateSmiles(): Future[SmilesGenerationResult] = {
     for {
-      result <- smilesRepository.getNextMostRatedNotSentSmile().flatMap {
+      nextMostRatedSmiles <- smilesRepository.getNextMostRatedNotSentSmiles()
+      nextSmile = chooseARandomSmile(nextMostRatedSmiles)
+      result <- nextSmile match {
         case Some(smile) => sendSmileAndMarkItAsSent(smile)
         case None        => Future.successful(Left(NoExtractedSmilesFound))
       }
@@ -42,6 +50,14 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
     } yield result
 
   }
+
+  private def chooseARandomSmile(nextMostRatedSmiles: Seq[Smile]) =
+    if (nextMostRatedSmiles.nonEmpty) {
+      val randomIndex = random.nextInt(nextMostRatedSmiles.length)
+      Some(nextMostRatedSmiles(randomIndex))
+    } else {
+      None
+    }
 
   private def sendSmileAndMarkItAsSent(smile: Smile): Future[SmilesGenerationResult] = {
     for {
