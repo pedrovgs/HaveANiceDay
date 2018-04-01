@@ -124,7 +124,7 @@ class SmilesGeneratorSpec
     resetDatabase()
   }
 
-  it should "generate the most rated not sent smile as a notification sending it to our users" in {
+  it should "generate one of the most rated not sent smile as a notification sending it to our users" in {
     forAll(RichGen.nonEmptyListOfMaxN(10, arbitraryNotSentSmile)) { smiles =>
       givenTwitterClientReturns(smiles)
       givenTheNotificationsClientSendsTheNotification()
@@ -132,7 +132,7 @@ class SmilesGeneratorSpec
       val extractedSmiles = smilesGenerator.extractSmiles().awaitForResult.right.get
       val result          = smilesGenerator.generateSmiles().awaitForResult.right.get
 
-      assertMostRatedSmileWasSent(extractedSmiles, result, 1, times(1))
+      assertSmileWasSent(extractedSmiles, result, 1, times(1))
       reset(notificationsClient)
       resetDatabase()
     }
@@ -147,7 +147,7 @@ class SmilesGeneratorSpec
       (1 to extractedSmiles.length).foreach { smileNumber =>
         val result = smilesGenerator.generateSmiles().awaitForResult.right.get
 
-        extractedSmiles = assertMostRatedSmileWasSent(extractedSmiles, result, smileNumber, atLeastOnce())
+        extractedSmiles = assertSmileWasSent(extractedSmiles, result, smileNumber, atLeastOnce())
       }
       val noMoreSmilesResult = smilesGenerator.generateSmiles().awaitForResult
       noMoreSmilesResult shouldBe Left(NoExtractedSmilesFound)
@@ -168,21 +168,21 @@ class SmilesGeneratorSpec
     }
   }
 
-  private def assertMostRatedSmileWasSent(extractedSmiles: Seq[Smile],
-                                          result: Smile,
-                                          smileNumber: Int,
-                                          numberOfNotificationsSent: VerificationMode): Seq[Smile] = {
+  private def assertSmileWasSent(extractedSmiles: Seq[Smile],
+                                 result: Smile,
+                                 smileNumber: Int,
+                                 numberOfNotificationsSent: VerificationMode): Seq[Smile] = {
     val smilesSortedByLikes = extractedSmiles
       .filterNot(_.sent)
       .sortBy(smile => (smile.numberOfLikes, smile.id))
       .reverse
-    val expectedSmile = smilesSortedByLikes.head
-    result.id shouldBe expectedSmile.id
+    smilesSortedByLikes.map(_.id).contains(result.id) shouldBe true
     result.sent shouldBe true
     result.sentDate shouldBe Some(clock.now)
     result.number shouldBe Some(smileNumber)
-    verifySmileSent(expectedSmile, smileNumber, numberOfNotificationsSent)
-    extractedSmiles.filterNot(_ == expectedSmile)
+    val expectedNotificationSent = smilesSortedByLikes.find(_.id == result.id).get
+    verifySmileSent(expectedNotificationSent, smileNumber, numberOfNotificationsSent)
+    extractedSmiles.filterNot(_ == result)
   }
 
   private def verifySmileSent(expectedSmile: Smile, smileNumber: Int, numberOfNotificationsSent: VerificationMode) = {
