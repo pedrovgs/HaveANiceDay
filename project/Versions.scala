@@ -1,5 +1,5 @@
 object Versions {
-  val project = "0.1"
+  val project = "1.5.0"
   val scala = "2.12.3"
   val finatra = "2.13.0"
   val logback = "1.2.3"
