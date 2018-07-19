@@ -40,8 +40,7 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
 
   def generateSmiles(): Future[SmilesGenerationResult] = {
     for {
-      nextMostRatedSmiles <- smilesRepository.getNextMostRatedNotSentSmiles()
-      nextSmile = chooseARandomSmile(nextMostRatedSmiles)
+      nextSmile <- smilesRepository.getRandomSmile(sent = false)
       result <- nextSmile match {
         case Some(smile) => sendSmileAndMarkItAsSent(smile)
         case None        => Future.successful(Left(NoExtractedSmilesFound))
@@ -50,14 +49,6 @@ class SmilesGenerator @Inject()(config: SmilesGeneratorConfig,
     } yield result
 
   }
-
-  private def chooseARandomSmile(nextMostRatedSmiles: Seq[Smile]) =
-    if (nextMostRatedSmiles.nonEmpty) {
-      val randomIndex = random.nextInt(nextMostRatedSmiles.length)
-      Some(nextMostRatedSmiles(randomIndex))
-    } else {
-      None
-    }
 
   private def sendSmileAndMarkItAsSent(smile: Smile): Future[SmilesGenerationResult] = {
     for {

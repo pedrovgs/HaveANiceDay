@@ -26,12 +26,6 @@ class SmilesRepository @Inject()(database: Database) {
     database.db.run(DBIO.sequence(inserts).transactionally).map(asDomain)
   }
 
-  def getNextMostRatedNotSentSmiles(numberOfSmiles: Int = 100): Future[Seq[Smile]] = {
-    val query =
-      SmilesTable.filterNot(_.sent).sortBy(row => (row.numberOfLikes.desc, row.id.desc)).take(numberOfSmiles).result
-    database.db.run(query).map(asDomain)
-  }
-
   def getLastSmileSent(): Future[Option[Smile]] = {
     val query = SmilesTable.filter(row => row.sent).sortBy(_.smileNumber.desc).take(1).result.headOption
     database.db.run(query).map {
@@ -59,9 +53,9 @@ class SmilesRepository @Inject()(database: Database) {
     database.db.run(query).map(_.map(asDomain))
   }
 
-  def getRandomSmile(): Future[Option[Smile]] = {
+  def getRandomSmile(sent: Boolean = true): Future[Option[Smile]] = {
     val rand  = SimpleFunction.nullary[Double]("rand")
-    val query = SmilesTable.filter(row => row.sent).sortBy(_ => rand).take(1).result.headOption
+    val query = SmilesTable.filter(row => row.sent === sent).sortBy(_ => rand).take(1).result.headOption
     database.db.run(query).map(_.map(asDomain))
   }
 

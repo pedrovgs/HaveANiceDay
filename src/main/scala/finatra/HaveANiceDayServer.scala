@@ -7,7 +7,6 @@ import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finatra.http.HttpServer
 import com.twitter.finatra.http.filters.{CommonFilters, LoggingMDCFilter, TraceIdMDCFilter}
 import com.twitter.finatra.http.routing.HttpRouter
-import finatra.HaveANiceDayServerMain.sharedInstance
 import finatra.api.HaveANiceDayJacksonModule
 import finatra.config.ConfigModule
 import finatra.controllers.{ManualTestingController, RootController, SmilesController}

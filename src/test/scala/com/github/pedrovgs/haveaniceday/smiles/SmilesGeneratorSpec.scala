@@ -124,7 +124,7 @@ class SmilesGeneratorSpec
     resetDatabase()
   }
 
-  it should "generate one of the most rated not sent smile as a notification sending it to our users" in {
+  it should "generate one random not sent smile as a notification sending it to our users" in {
     forAll(RichGen.nonEmptyListOfMaxN(10, arbitraryNotSentSmile)) { smiles =>
       givenTwitterClientReturns(smiles)
       givenTheNotificationsClientSendsTheNotification()
